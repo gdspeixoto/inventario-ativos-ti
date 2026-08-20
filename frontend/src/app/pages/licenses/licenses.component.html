@@ -1,0 +1,147 @@
+<app-page-header title="licenses.title" description="licenses.subtitle" icon="pi pi-id-card">
+  <p-button
+    label="Nova licença"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="open('create')"
+  />
+</app-page-header>
+
+@if (demoMode) {
+  <app-demo-notice />
+}
+
+<app-card title="licenses.listTitle" icon="pi pi-microsoft" [flush]="true">
+  <div class="toolbar">
+    <label class="sr-only" for="licenseSearch">Buscar licença</label>
+    <input
+      id="licenseSearch"
+      pInputText
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      placeholder="Buscar licença, produto ou fabricante"
+      (keydown.enter)="load()"
+    />
+    <p-button
+      label="Filtrar"
+      icon="pi pi-filter"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="load()"
+    />
+  </div>
+
+  @if (records.isLoading() && !records.data()) {
+    <app-loading message="common.loading" />
+  } @else if (records.hasError()) {
+    <app-error-state [error]="records.error()" (retry)="load()" />
+  } @else if (items().length === 0) {
+    <p class="empty">Nenhuma licença encontrada com os filtros aplicados.</p>
+  } @else {
+    <p-table
+      [value]="items()"
+      [paginator]="true"
+      [rows]="10"
+      [tableStyle]="{ 'min-width': '78rem' }"
+      dataKey="id"
+    >
+      <ng-template #header>
+        <tr>
+          <th scope="col">Licença</th>
+          <th scope="col">Uso</th>
+          <th scope="col">Valor unit.</th>
+          <th scope="col">Mensal</th>
+          <th scope="col">Anual</th>
+          <th scope="col">Renovação</th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="sr-only">Ações</span></th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-item>
+        <tr>
+          <td>
+            <a [routerLink]="['/licenses', item.id]">{{ item.name }}</a>
+            <small>{{ item.product }} · {{ item.organizationalUnitName }}</small>
+          </td>
+          <td>
+            <div class="usage">
+              <span>{{ item.usedQuantity }}/{{ item.contractedQuantity }}</span>
+              <p-progressbar [value]="item.utilizationRate" [showValue]="false" />
+            </div>
+          </td>
+          <td><app-money [amount]="item.unitPrice" /></td>
+          <td><app-money [amount]="item.monthlyAmount" /></td>
+          <td><app-money [amount]="item.annualAmount" /></td>
+          <td>{{ item.renewalDate ? (item.renewalDate | date: 'dd/MM/yyyy') : '-' }}</td>
+          <td><app-status-badge [value]="item.status" /></td>
+          <td class="actions">
+            <p-button
+              icon="pi pi-dollar"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Registrar reajuste"
+              (onClick)="open('adjustment', item)"
+            />
+            <p-button
+              icon="pi pi-users"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Alterar quantidade"
+              (onClick)="open('quantity', item)"
+            />
+            <p-button
+              icon="pi pi-chart-bar"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Atualizar utilização"
+              (onClick)="open('usage', item)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</app-card>
+
+<app-license-form
+  [visible]="dialog() === 'create'"
+  [units]="units()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+@if (selected(); as item) {
+  <app-price-adjustment-form
+    [visible]="dialog() === 'adjustment'"
+    target="license"
+    [targetId]="item.id"
+    [targetName]="item.name"
+    [currentAmount]="item.monthlyAmount"
+    [currency]="item.currency"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-quantity-form
+    [visible]="dialog() === 'quantity'"
+    [licenseId]="item.id"
+    [currentQuantity]="item.contractedQuantity"
+    [usedQuantity]="item.usedQuantity"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-usage-form
+    [visible]="dialog() === 'usage'"
+    [licenseId]="item.id"
+    [contractedQuantity]="item.contractedQuantity"
+    [currentUsage]="item.usedQuantity"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+}

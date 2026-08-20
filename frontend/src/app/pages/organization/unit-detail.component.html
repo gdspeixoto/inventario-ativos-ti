@@ -1,0 +1,152 @@
+@if (detail.isLoading() && !detail.data()) {
+  <app-loading message="common.loading" />
+} @else if (detail.hasError()) {
+  <app-error-state [error]="detail.error()" (retry)="load()" />
+} @else if (detail.data(); as unit) {
+  <app-page-header [title]="unit.name" [description]="unit.code" icon="pi pi-sitemap">
+    <p-button
+      icon="pi pi-ellipsis-v"
+      size="small"
+      severity="secondary"
+      [text]="true"
+      ariaLabel="Mais ações"
+      (onClick)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="recordActions" [popup]="true" appendTo="body" />
+
+    <p-button
+      label="Voltar"
+      icon="pi pi-arrow-left"
+      routerLink="/organization"
+      severity="secondary"
+      [text]="true"
+      size="small"
+    />
+  </app-page-header>
+
+  <!--
+    A cadeia acima situa a unidade na instituição. Um nome como "Sistemas"
+    sozinho não diz de qual área ele faz parte.
+  -->
+  @if (unit.ancestors.length > 0) {
+    <nav class="breadcrumb" aria-label="Hierarquia">
+      @for (ancestor of unit.ancestors; track ancestor.id) {
+        <a [routerLink]="['/organization/units', ancestor.id]">{{ ancestor.name }}</a>
+        <span aria-hidden="true">/</span>
+      }
+      <strong>{{ unit.name }}</strong>
+    </nav>
+  }
+
+  <section class="grid">
+    <app-stat-card label="Custo mensal" [value]="unit.monthlyCost" [money]="true" icon="pi pi-wallet" />
+    <app-stat-card label="Custo anual" [value]="unit.annualCost" [money]="true" icon="pi pi-chart-line" />
+    <app-stat-card label="Ativos" [value]="unit.assetCount" icon="pi pi-box" />
+    <app-stat-card label="Contratos" [value]="unit.contractCount" icon="pi pi-file" />
+  </section>
+
+  <div class="cols">
+    <app-card title="Dados da unidade" icon="pi pi-info-circle">
+      <dl class="facts">
+        <dt>Tipo</dt>
+        <dd>{{ typeLabel(unit.type) }}</dd>
+
+        <dt>Situação</dt>
+        <dd><app-status-badge [value]="unit.isActive ? 'Ativo' : 'Inativo'" /></dd>
+
+        @if (unit.parentName) {
+          <dt>Unidade pai</dt>
+          <dd>
+            <a [routerLink]="['/organization/units', unit.parentId]">{{ unit.parentName }}</a>
+          </dd>
+        }
+
+        <dt>Licenças</dt>
+        <dd>{{ unit.licenseCount }}</dd>
+
+        <dt>Servidores</dt>
+        <dd>{{ unit.serverCount }}</dd>
+
+        @if (unit.description) {
+          <dt>Descrição</dt>
+          <dd>{{ unit.description }}</dd>
+        }
+      </dl>
+
+      <!--
+        O que impede a exclusão fica visível antes de qualquer tentativa.
+        Descobrir depois de digitar o nome inteiro seria puni-lo à toa.
+      -->
+      @if (unit.deletionBlockers.length > 0) {
+        <div class="blockers">
+          <p class="blockers__title">Esta unidade não pode ser excluída porque possui:</p>
+          <ul>
+            @for (blocker of unit.deletionBlockers; track blocker) {
+              <li>{{ blocker }}</li>
+            }
+          </ul>
+          <p class="blockers__hint">
+            Desativar mantém a unidade e todo o histórico, apenas retirando-a de uso.
+          </p>
+        </div>
+      } @else {
+        <p class="deletable">Nada depende desta unidade — ela pode ser excluída.</p>
+      }
+    </app-card>
+
+    <app-card title="Estrutura abaixo desta unidade" icon="pi pi-sitemap">
+      @if (unit.children.length === 0) {
+        <p class="empty">Nenhuma unidade subordinada.</p>
+      } @else {
+        <div class="tree">
+          @for (child of unit.children; track child.id) {
+            <app-unit-tree-node [node]="child" />
+          }
+        </div>
+      }
+    </app-card>
+  </div>
+
+  <app-card title="Responsáveis" icon="pi pi-users" [flush]="true">
+    @if (unit.assignments.length === 0) {
+      <p class="empty empty--padded">Nenhum vínculo de gestão ativo.</p>
+    } @else {
+      <p-table [value]="assignmentRows()" [tableStyle]="{ 'min-width': '42rem' }">
+        <ng-template #header>
+          <tr>
+            <th>Usuário</th>
+            <th>Papel</th>
+            <th>Escopo</th>
+            <th>Situação</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr>
+            <td>
+              {{ item.userDisplayName }}<small>{{ item.userEmail }}</small>
+            </td>
+            <td>{{ roleLabel(item.role) }}</td>
+            <td>{{ item.includesDescendants ? 'Inclui descendentes' : 'Somente unidade' }}</td>
+            <td><app-status-badge [value]="item.isActive ? 'Ativo' : 'Encerrado'" /></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </app-card>
+
+  <app-unit-edit-form
+    [visible]="dialog() === 'edit'"
+    [unit]="unit"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-delete-dialog
+    [visible]="dialog() === 'delete'"
+    [itemName]="unit.name"
+    [action]="deleteAction"
+    [canDeactivate]="false"
+    (deleted)="afterDelete()"
+    (cancelled)="close()"
+  />
+}

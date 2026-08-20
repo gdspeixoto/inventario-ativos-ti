@@ -1,0 +1,79 @@
+/**
+ * Design token entry point.
+ *
+ * `@use 'tokens' as tokens;` from any component stylesheet to reach the helper
+ * functions/mixins. The CSS custom properties themselves are emitted once, from
+ * `src/styles.scss`, via `@include tokens.emit()`.
+ */
+
+@forward 'palette';
+@forward 'base';
+@forward 'light';
+@forward 'dark';
+
+@use 'light' as light;
+@use 'dark' as dark;
+
+/// Emits every design token declaration. Call exactly once, globally.
+@mixin emit {
+  :root,
+  :root[data-theme='light'] {
+    @include light.light-tokens;
+  }
+
+  :root[data-theme='dark'] {
+    @include dark.dark-tokens;
+  }
+}
+
+/// Shorthand for `var(--app-color-…)`.
+/// @example scss - color: tokens.color(primary);
+@function color($name) {
+  @return var(--app-color-#{$name});
+}
+
+/// Shorthand for `var(--app-spacing-…)`.
+@function spacing($name) {
+  @return var(--app-spacing-#{$name});
+}
+
+/// Shorthand for `var(--app-radius-…)`.
+@function radius($name) {
+  @return var(--app-radius-#{$name});
+}
+
+/// Shorthand for `var(--app-shadow-…)`.
+@function shadow($name) {
+  @return var(--app-shadow-#{$name});
+}
+
+/// Shorthand for `var(--app-font-size-…)`.
+@function font-size($name) {
+  @return var(--app-font-size-#{$name});
+}
+
+/// Accessible focus ring shared by every interactive element.
+@mixin focus-ring($offset: var(--app-focus-ring-offset)) {
+  outline: var(--app-focus-ring-width) solid var(--app-color-focus-ring);
+  outline-offset: $offset;
+}
+
+/// Visually hidden but available to screen readers.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/// Truncates a single line of text with an ellipsis.
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

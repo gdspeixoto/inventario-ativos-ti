@@ -1,0 +1,101 @@
+<nav
+  class="app-sidebar"
+  [class.app-sidebar--rail]="layout.isRail()"
+  [attr.aria-label]="'nav.menu' | translate"
+>
+  <div class="app-sidebar__scroll">
+    @for (section of menu.visibleSections(); track section.id) {
+      <div class="app-sidebar__section">
+        @if (section.label && !layout.isRail()) {
+          <p class="app-sidebar__section-label">{{ section.label | translate }}</p>
+        }
+
+        <ul class="app-sidebar__list">
+          @for (item of section.items; track item.id) {
+            <li>
+              @if (item.children?.length) {
+                <button
+                  type="button"
+                  class="app-sidebar__item"
+                  [attr.aria-expanded]="isExpanded(item)"
+                  [pTooltip]="layout.isRail() ? (item.label | translate) : ''"
+                  tooltipPosition="right"
+                  (click)="toggleGroup(item)"
+                >
+                  <i class="app-sidebar__icon {{ item.icon }}" aria-hidden="true"></i>
+                  @if (!layout.isRail()) {
+                    <span class="app-sidebar__label">{{ item.label | translate }}</span>
+                    <i
+                      class="app-sidebar__chevron pi"
+                      [class.pi-chevron-down]="isExpanded(item)"
+                      [class.pi-chevron-right]="!isExpanded(item)"
+                      aria-hidden="true"
+                    ></i>
+                  }
+                </button>
+
+                @if (isExpanded(item) && !layout.isRail()) {
+                  <ul class="app-sidebar__list app-sidebar__list--nested">
+                    @for (child of item.children; track child.id) {
+                      <li>
+                        <a
+                          class="app-sidebar__item"
+                          [routerLink]="child.route"
+                          routerLinkActive="app-sidebar__item--active"
+                          #childLink="routerLinkActive"
+                          [routerLinkActiveOptions]="{ exact: child.exact ?? false }"
+                          [attr.aria-current]="childLink.isActive ? 'page' : null"
+                          (click)="onNavigate()"
+                        >
+                          <span class="app-sidebar__label">{{ child.label | translate }}</span>
+                          @if (child.badge) {
+                            <span class="app-sidebar__badge">{{ child.badge }}</span>
+                          }
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                }
+              } @else if (item.url) {
+                <a
+                  class="app-sidebar__item"
+                  [href]="item.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  [pTooltip]="layout.isRail() ? (item.label | translate) : ''"
+                  tooltipPosition="right"
+                >
+                  <i class="app-sidebar__icon {{ item.icon }}" aria-hidden="true"></i>
+                  @if (!layout.isRail()) {
+                    <span class="app-sidebar__label">{{ item.label | translate }}</span>
+                    <i class="app-sidebar__chevron pi pi-external-link" aria-hidden="true"></i>
+                  }
+                </a>
+              } @else {
+                <a
+                  class="app-sidebar__item"
+                  [routerLink]="item.route"
+                  routerLinkActive="app-sidebar__item--active"
+                  #link="routerLinkActive"
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                  [attr.aria-current]="link.isActive ? 'page' : null"
+                  [pTooltip]="layout.isRail() ? (item.label | translate) : ''"
+                  tooltipPosition="right"
+                  (click)="onNavigate()"
+                >
+                  <i class="app-sidebar__icon {{ item.icon }}" aria-hidden="true"></i>
+                  @if (!layout.isRail()) {
+                    <span class="app-sidebar__label">{{ item.label | translate }}</span>
+                    @if (item.badge) {
+                      <span class="app-sidebar__badge">{{ item.badge }}</span>
+                    }
+                  }
+                </a>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</nav>

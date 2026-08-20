@@ -1,0 +1,94 @@
+<app-page-header title="servers.title" description="servers.subtitle" icon="pi pi-server">
+  <p-button
+    label="Novo servidor"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="open('create')"
+  />
+</app-page-header>
+
+@if (demoMode) { <app-demo-notice /> }
+
+<app-card title="servers.listTitle" icon="pi pi-server" [flush]="true">
+  <div class="toolbar">
+    <label class="sr-only" for="serverSearch">Buscar servidor</label>
+    <input
+      id="serverSearch"
+      pInputText
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      placeholder="Buscar servidor ou hostname"
+      (keydown.enter)="load()"
+    />
+    <p-button label="Filtrar" icon="pi pi-filter" severity="secondary" [outlined]="true" (onClick)="load()" />
+  </div>
+
+  @if (records.isLoading() && !records.data()) {
+    <app-loading message="common.loading" />
+  } @else if (records.hasError()) {
+    <app-error-state [error]="records.error()" (retry)="load()" />
+  } @else if (items().length === 0) {
+    <p class="empty">Nenhum servidor encontrado.</p>
+  } @else {
+    <p-table [value]="items()" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '78rem' }">
+      <ng-template #header>
+        <tr>
+          <th scope="col">Servidor</th><th scope="col">Ambiente</th><th scope="col">Tipo</th>
+          <th scope="col">Recursos</th><th scope="col">Backup</th><th scope="col">Custo mensal</th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="sr-only">Ações</span></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>
+            <a [routerLink]="['/servers', item.id]">{{ item.name }}</a>
+            <small>{{ item.hostname }} · {{ item.organizationalUnitName }}</small>
+          </td>
+          <td>{{ environmentLabel(item.environment) }}</td>
+          <td>{{ typeLabel(item.serverType) }}</td>
+          <td>{{ item.cpuCores }} vCPU · {{ item.memoryGb }} GB · {{ item.storageGb }} GB</td>
+          <td [class.warn]="!item.lastBackupAt">
+            {{ item.lastBackupAt ? (item.lastBackupAt | date: 'dd/MM HH:mm') : 'Sem registro' }}
+          </td>
+          <td><app-money [amount]="item.monthlyAmount" /></td>
+          <td><app-status-badge [value]="item.status" /></td>
+          <td class="actions">
+            <p-button
+              icon="pi pi-power-off"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="danger"
+              ariaLabel="Desativar servidor"
+              (onClick)="open('decommission', item)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</app-card>
+
+<app-server-form
+  [visible]="dialog() === 'create'"
+  [units]="units()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+@if (selected(); as item) {
+  <app-reason-form
+    [visible]="dialog() === 'decommission'"
+    title="forms.decommission"
+    fieldId="decommission"
+    submitLabel="actions.decommission"
+    submitIcon="pi pi-power-off"
+    [warning]="'O servidor ' + item.name + ' deixará de contar nos custos ativos.'"
+    successMessage="feedback.serverDecommissioned"
+    [action]="decommissionAction"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+}

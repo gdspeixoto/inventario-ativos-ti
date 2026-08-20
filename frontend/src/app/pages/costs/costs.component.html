@@ -1,0 +1,81 @@
+<app-page-header title="costs.title" description="costs.subtitle" icon="pi pi-dollar">
+  <p-button
+    label="Novo lançamento"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="openEntry()"
+  />
+  <p-button label="Atualizar" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="load()" />
+</app-page-header>
+
+<app-cost-entry-form
+  [visible]="dialogOpen()"
+  [units]="units()"
+  (saved)="afterEntry()"
+  (closed)="closeEntry()"
+/>
+
+@if (demoMode) { <app-demo-notice /> }
+
+@if (summary.isLoading() && !data()) {
+  <app-loading message="common.loading" />
+} @else if (summary.hasError()) {
+  <app-error-state [error]="summary.error()" (retry)="load()" />
+} @else if (data(); as costs) {
+  <section class="grid">
+    <app-stat-card label="Custo mensal" [value]="costs.currentMonthlyCost" [money]="true" icon="pi pi-wallet" />
+    <app-stat-card label="Custo anual" [value]="costs.projectedAnnualCost" [money]="true" icon="pi pi-chart-line" />
+    <app-stat-card label="Impacto anual dos reajustes" [value]="costs.accumulatedAnnualImpact" [money]="true" icon="pi pi-arrow-up" />
+    <app-stat-card
+      label="Sem reajuste há 12 meses"
+      [value]="costs.assetsWithoutAdjustmentOver12Months"
+      icon="pi pi-clock"
+      hint="itens a revisar"
+    />
+  </section>
+
+  <div class="cols">
+    <app-card title="Custos por fornecedor" icon="pi pi-building">
+      <div class="group-list">
+        @for (group of costs.bySupplier; track group.label) {
+          <div>
+            <span>{{ group.label }}<small>{{ group.itemCount }} item(ns)</small></span>
+            <app-money [amount]="group.monthlyAmount" />
+          </div>
+        } @empty {
+          <p class="empty">Nenhum custo por fornecedor no período.</p>
+        }
+      </div>
+    </app-card>
+
+    <app-card title="Histórico de reajustes" icon="pi pi-history" [flush]="true">
+      @if (items().length === 0) {
+        <p class="empty">Nenhum reajuste registrado.</p>
+      } @else {
+        <p-table [value]="items()" [tableStyle]="{ 'min-width': '64rem' }">
+          <ng-template #header>
+            <tr>
+              <th scope="col">Item</th><th scope="col">Anterior</th><th scope="col">Novo</th>
+              <th scope="col">Variação</th><th scope="col">Impacto anual</th><th scope="col">Data</th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-item>
+            <tr>
+              <td>{{ item.targetName }}<small>{{ item.reason }}</small></td>
+              <td><app-money [amount]="item.previousAmount" /></td>
+              <td><app-money [amount]="item.newAmount" /></td>
+              <td [class.danger]="item.exceedsThreshold">
+                {{ item.percentageDifference | number: '1.2-2' : 'pt-BR' }}%
+              </td>
+              <td><app-money [amount]="item.annualImpact" /></td>
+              <td>{{ item.effectiveDate | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      }
+    </app-card>
+  </div>
+} @else {
+  <p class="empty">Nenhum dado disponível.</p>
+}

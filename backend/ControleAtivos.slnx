@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ControleAtivos.Api/ControleAtivos.Api.csproj" />
+    <Project Path="src/ControleAtivos.Application/ControleAtivos.Application.csproj" />
+    <Project Path="src/ControleAtivos.Domain/ControleAtivos.Domain.csproj" />
+    <Project Path="src/ControleAtivos.Persistence/ControleAtivos.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ControleAtivos.IntegrationTests/ControleAtivos.IntegrationTests.csproj" />
+    <Project Path="tests/ControleAtivos.UnitTests/ControleAtivos.UnitTests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,167 @@
+@if (detail.isLoading() && !data()) {
+  <app-loading message="common.loading" />
+} @else if (detail.hasError()) {
+  <app-error-state [error]="detail.error()" (retry)="load()" />
+} @else if (data(); as license) {
+  <app-page-header
+    [title]="license.name"
+    [description]="license.code + ' · ' + license.organizationalUnitName"
+    icon="pi pi-id-card"
+  >
+    <p-button
+      label="Reajustar"
+      icon="pi pi-dollar"
+      size="small"
+      [disabled]="demoMode"
+      (onClick)="open('adjustment')"
+    />
+    <p-button
+      label="Quantidade"
+      icon="pi pi-users"
+      size="small"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="demoMode"
+      (onClick)="open('quantity')"
+    />
+    <p-button
+      label="Utilização"
+      icon="pi pi-chart-bar"
+      size="small"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="demoMode"
+      (onClick)="open('usage')"
+    />
+    <!--
+      Editar e Excluir ficam num menu à parte das ações de negócio. Corrigir um
+      cadastro é raro; reajustar e mudar quantidade é o dia a dia. Manter a
+      exclusão fora da linha de frente evita que ela seja clicada no lugar de
+      uma vizinha.
+    -->
+    <p-button
+      icon="pi pi-ellipsis-v"
+      size="small"
+      severity="secondary"
+      [text]="true"
+      [disabled]="demoMode"
+      ariaLabel="Mais ações"
+      (onClick)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="recordActions" [popup]="true" appendTo="body" />
+
+    <p-button
+      label="Voltar"
+      icon="pi pi-arrow-left"
+      routerLink="/licenses"
+      severity="secondary"
+      [text]="true"
+      size="small"
+    />
+  </app-page-header>
+
+  @if (demoMode) { <app-demo-notice /> }
+
+  <section class="grid">
+    <app-stat-card label="Custo mensal" [value]="license.monthlyAmount" [money]="true" icon="pi pi-wallet" />
+    <app-stat-card label="Custo anual" [value]="license.annualAmount" [money]="true" icon="pi pi-chart-line" />
+    <app-stat-card
+      label="Utilização"
+      [value]="license.utilizationRate"
+      icon="pi pi-users"
+      [hint]="license.usedQuantity + ' de ' + license.contractedQuantity + ' em uso'"
+    />
+    <app-stat-card label="Disponíveis" [value]="license.availableQuantity" icon="pi pi-box" />
+  </section>
+
+  <div class="cols">
+    <app-card title="Informações" icon="pi pi-info-circle">
+      <dl>
+        <dt>Status</dt><dd><app-status-badge [value]="license.status" /></dd>
+        <dt>Produto</dt><dd>{{ license.product }}</dd>
+        <dt>Fabricante</dt><dd>{{ license.manufacturer }}</dd>
+        <dt>Fornecedor</dt><dd>{{ license.supplierName || '-' }}</dd>
+        <dt>Contrato</dt><dd>{{ license.contractNumber || '-' }}</dd>
+        <dt>Centro de custo</dt><dd>{{ license.costCenterName || '-' }}</dd>
+        <dt>Resp. técnico</dt><dd>{{ license.technicalResponsibleName || '-' }}</dd>
+        <dt>Resp. financeiro</dt><dd>{{ license.financialResponsibleName || '-' }}</dd>
+      </dl>
+    </app-card>
+
+    <app-card title="Timeline da licença" icon="pi pi-history">
+      <app-timeline-list [events]="events()" />
+    </app-card>
+
+    <app-documents-panel entityType="License" [entityId]="license.id" [disabled]="demoMode" />
+  </div>
+} @else {
+  <app-page-header title="licenses.detailTitle" icon="pi pi-id-card">
+    <p-button label="Voltar" icon="pi pi-arrow-left" routerLink="/licenses" severity="secondary" [outlined]="true" size="small" />
+  </app-page-header>
+  <p class="empty">Licença não encontrada.</p>
+}
+
+
+@if (data(); as license) {
+  <app-price-adjustment-form
+    [visible]="dialog() === 'adjustment'"
+    target="license"
+    [targetId]="license.id"
+    [targetName]="license.name"
+    [currentAmount]="license.monthlyAmount"
+    [currency]="license.currency"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-quantity-form
+    [visible]="dialog() === 'quantity'"
+    [licenseId]="license.id"
+    [currentQuantity]="license.contractedQuantity"
+    [usedQuantity]="license.usedQuantity"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-usage-form
+    [visible]="dialog() === 'usage'"
+    [licenseId]="license.id"
+    [contractedQuantity]="license.contractedQuantity"
+    [currentUsage]="license.usedQuantity"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-license-edit-form
+    [visible]="dialog() === 'edit'"
+    [license]="license"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <!--
+    Cancelar preserva o registro e o histórico; é a alternativa oferecida
+    quando a exclusão é recusada por já existir movimento financeiro.
+  -->
+  <app-reason-form
+    [visible]="dialog() === 'cancel'"
+    title="Cancelar licença"
+    description="O registro e todo o histórico são preservados. A licença deixa de contar nos custos ativos."
+    fieldId="cancel-license"
+    submitLabel="Cancelar licença"
+    submitIcon="pi pi-ban"
+    successMessage="Licença cancelada."
+    [action]="cancelAction"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-delete-dialog
+    [visible]="dialog() === 'delete'"
+    [itemName]="license.name"
+    [action]="deleteAction"
+    (deleted)="afterDelete()"
+    (deactivateInstead)="open('cancel')"
+    (cancelled)="close()"
+  />
+}

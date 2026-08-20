@@ -1,0 +1,25 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+td small {
+  display: block;
+  color: var(--app-color-text-muted);
+  margin-top: 0.2rem;
+}
+input {
+  min-width: 24rem;
+}
+@media (max-width: 700px) {
+  .toolbar {
+    flex-direction: column;
+  }
+  input {
+    min-width: 0;
+    width: 100%;
+  }
+}
+.empty { padding: 2rem; text-align: center; color: var(--app-color-text-muted); }
+.warn { color: var(--app-color-danger); }

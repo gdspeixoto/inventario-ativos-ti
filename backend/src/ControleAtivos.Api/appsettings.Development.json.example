@@ -1,0 +1,31 @@
+{
+  "Serilog": {
+    "MinimumLevel": {
+      "Default": "Debug",
+      "Override": {
+        "Microsoft.AspNetCore": "Information",
+        "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+      }
+    }
+  },
+  "ConnectionStrings": {
+    "Postgres": "Host=localhost;Port=5433;Database=controle_ativos;Username=controle_ativos_app;Password=<senha do infra/.env>;Include Error Detail=true"
+  },
+  "Keycloak": {
+    "Authority": "https://sso.example.com/realms/inventario",
+    "Audience": "controle-ativos-api",
+    "ClientId": "controle-ativos-api",
+    "RequireHttpsMetadata": true
+  },
+  "Cors": {
+    "AllowedOrigins": [
+      "http://localhost:4200"
+    ]
+  },
+  "Database": {
+    "AutoMigrate": true
+  },
+  "DocumentStorage": {
+    "RootPath": "storage/documents"
+  }
+}

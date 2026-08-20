@@ -1,0 +1,64 @@
+/**
+ * Minimal reset layered on top of Tailwind Preflight.
+ * Only rules that Preflight does not already cover, or that must follow tokens.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-size: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background-color: var(--app-color-background);
+  color: var(--app-color-text);
+  font-family: var(--app-font-sans);
+  font-size: var(--app-font-size-md);
+  line-height: var(--app-line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color var(--app-transition),
+    color var(--app-transition);
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

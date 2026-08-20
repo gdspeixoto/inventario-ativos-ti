@@ -1,0 +1,77 @@
+<app-page-header title="settings.title" description="settings.subtitle" icon="pi pi-cog" />
+
+<div class="settings__grid">
+  <app-card title="settings.appearance" subtitle="settings.appearanceSubtitle" icon="pi pi-palette">
+    <div class="settings__row">
+      <span id="theme-switcher-label" class="settings__label">{{
+        'theme.current' | translate
+      }}</span>
+      <app-theme-switcher variant="segmented" />
+    </div>
+
+    <div class="settings__row">
+      <span id="density-label" class="settings__label">{{ 'theme.density' | translate }}</span>
+      <p-selectbutton
+        [options]="densityOptions()"
+        [ngModel]="theme.density()"
+        (ngModelChange)="onDensityChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        ariaLabelledBy="density-label"
+      />
+    </div>
+
+    <div class="settings__row">
+      <span id="language-label" class="settings__label">{{ 'language.label' | translate }}</span>
+      <p-selectbutton
+        [options]="languageOptions()"
+        [ngModel]="i18n.locale()"
+        (ngModelChange)="onLanguageChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        [allowEmpty]="false"
+        ariaLabelledBy="language-label"
+      />
+    </div>
+  </app-card>
+
+  <app-card title="settings.session" subtitle="settings.sessionSubtitle" icon="pi pi-id-card">
+    <dl class="settings__list">
+      <div>
+        <dt>{{ 'dashboard.provider' | translate }}</dt>
+        <dd><p-tag [value]="user().provider || '—'" severity="info" [rounded]="true" /></dd>
+      </div>
+      <div>
+        <dt>{{ 'dashboard.username' | translate }}</dt>
+        <dd>{{ user().username || '—' }}</dd>
+      </div>
+      <div>
+        <dt>{{ 'auth.roles' | translate }}</dt>
+        <dd class="settings__tags">
+          @for (role of user().roles; track role) {
+            <p-tag [value]="role" severity="secondary" [rounded]="true" />
+          } @empty {
+            <span class="text-caption">{{ 'auth.noRoles' | translate }}</span>
+          }
+        </dd>
+      </div>
+      <div>
+        <dt>{{ 'auth.permissions' | translate }}</dt>
+        <dd class="settings__tags">
+          @for (permission of user().permissions; track permission) {
+            <p-tag [value]="permission" severity="secondary" [rounded]="true" />
+          } @empty {
+            <span class="text-caption">—</span>
+          }
+        </dd>
+      </div>
+      @if (tokenExpiresAt(); as expiresAt) {
+        <div>
+          <dt>{{ 'dashboard.tokenExpiresAt' | translate }}</dt>
+          <dd>{{ expiresAt | date: 'medium' }}</dd>
+        </div>
+      }
+    </dl>
+  </app-card>
+</div>

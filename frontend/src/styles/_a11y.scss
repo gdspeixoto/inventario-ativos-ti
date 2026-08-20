@@ -1,0 +1,54 @@
+/**
+ * Accessibility primitives (WCAG 2.2 AA).
+ *
+ * - A single, consistent focus ring on every keyboard-focusable element.
+ * - `.skip-link` for bypassing the navigation (WCAG 2.4.1).
+ * - `.sr-only` for screen-reader-only content.
+ * - Forced-colors support for Windows High Contrast.
+ */
+
+@use 'tokens' as tokens;
+
+:focus-visible {
+  @include tokens.focus-ring;
+
+  border-radius: var(--app-radius-sm);
+}
+
+/* Never remove the ring for mouse users without providing another affordance. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.sr-only {
+  @include tokens.visually-hidden;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--app-spacing-xs);
+  left: var(--app-spacing-xs);
+  z-index: var(--app-z-toast);
+  padding: var(--app-spacing-xs) var(--app-spacing-md);
+  border-radius: var(--app-radius-md);
+  background-color: var(--app-color-primary);
+  color: var(--app-color-text-on-primary);
+  font-weight: var(--app-font-weight-medium);
+  transform: translateY(-200%);
+  transition: transform var(--app-transition);
+
+  &:focus {
+    transform: translateY(0);
+  }
+}
+
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid CanvasText;
+  }
+
+  .app-card,
+  .p-card {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,66 @@
+/**
+ * Tailwind entry point.
+ *
+ * Loaded before `styles.scss` (see angular.json) so that our SCSS layer can
+ * always override utility classes when a component needs it.
+ *
+ * The `@theme` block below does NOT define colors — it *maps* Tailwind's color
+ * scale onto the design tokens declared in `src/styles/tokens`. That way a
+ * single token change repaints both the Tailwind utilities and the PrimeNG
+ * components. Never hardcode a hex value in a component.
+ */
+/*
+ * Layer order shared with PrimeNG (`cssLayer` in app.config.ts): utilities come
+ * last, so a Tailwind class always wins over a PrimeNG component style.
+ */
+@layer theme, base, primeng, utilities;
+
+@import 'tailwindcss';
+@plugin 'tailwindcss-primeui';
+
+/* Dark mode is driven by `data-theme` on <html>, set by the ThemeService. */
+@custom-variant dark ([data-theme='dark'] &);
+
+@theme inline {
+  --color-primary: var(--app-color-primary);
+  --color-primary-hover: var(--app-color-primary-hover);
+  --color-primary-active: var(--app-color-primary-active);
+  --color-primary-contrast: var(--app-color-primary-contrast);
+  --color-primary-subtle: var(--app-color-primary-subtle);
+
+  --color-background: var(--app-color-background);
+  --color-surface: var(--app-color-surface);
+  --color-surface-hover: var(--app-color-surface-hover);
+  --color-card: var(--app-color-card);
+  --color-overlay: var(--app-color-overlay);
+
+  --color-content: var(--app-color-text);
+  --color-content-secondary: var(--app-color-text-secondary);
+  --color-content-muted: var(--app-color-text-muted);
+  --color-content-inverse: var(--app-color-text-inverse);
+
+  --color-border: var(--app-color-border);
+  --color-border-strong: var(--app-color-border-strong);
+
+  --color-success: var(--app-color-success);
+  --color-warning: var(--app-color-warning);
+  --color-danger: var(--app-color-danger);
+  --color-info: var(--app-color-info);
+
+  --radius-sm: var(--app-radius-sm);
+  --radius-md: var(--app-radius-md);
+  --radius-lg: var(--app-radius-lg);
+
+  --shadow-sm: var(--app-shadow-sm);
+  --shadow-md: var(--app-shadow-md);
+  --shadow-lg: var(--app-shadow-lg);
+
+  --spacing-xs: var(--app-spacing-xs);
+  --spacing-sm: var(--app-spacing-sm);
+  --spacing-md: var(--app-spacing-md);
+  --spacing-lg: var(--app-spacing-lg);
+  --spacing-xl: var(--app-spacing-xl);
+
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+}

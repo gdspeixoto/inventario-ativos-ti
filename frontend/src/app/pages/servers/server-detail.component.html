@@ -1,0 +1,135 @@
+@if (detail.isLoading() && !data()) {
+  <app-loading message="common.loading" />
+} @else if (detail.hasError()) {
+  <app-error-state [error]="detail.error()" (retry)="load()" />
+} @else if (data(); as server) {
+  <app-page-header
+    [title]="server.name"
+    [description]="server.hostname + ' · ' + environmentLabel(server.environment)"
+    icon="pi pi-server"
+  >
+    <p-button
+      label="Custos"
+      icon="pi pi-wallet"
+      size="small"
+      [disabled]="demoMode"
+      (onClick)="open('costs')"
+    />
+    <p-button
+      label="Redimensionar"
+      icon="pi pi-expand"
+      size="small"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="demoMode"
+      (onClick)="open('resize')"
+    />
+    <!--
+      Desativar, editar e excluir são ações sobre o registro, não sobre a
+      operação do servidor. Agrupá-las separa o que se faz todo dia (custos,
+      redimensionar) do que se faz uma vez só.
+    -->
+    <p-button
+      icon="pi pi-ellipsis-v"
+      size="small"
+      severity="secondary"
+      [text]="true"
+      [disabled]="demoMode"
+      ariaLabel="Mais ações"
+      (onClick)="menu.toggle($event)"
+    />
+    <p-menu #menu [model]="recordActions" [popup]="true" appendTo="body" />
+
+    <p-button label="Voltar" icon="pi pi-arrow-left" routerLink="/servers" severity="secondary" [text]="true" size="small" />
+  </app-page-header>
+
+  @if (demoMode) { <app-demo-notice /> }
+
+  <section class="grid">
+    <app-stat-card label="Custo mensal" [value]="server.monthlyAmount" [money]="true" icon="pi pi-wallet" />
+    <app-stat-card label="Custo anual" [value]="server.annualAmount" [money]="true" icon="pi pi-chart-line" />
+    <app-stat-card label="vCPU" [value]="server.cpuCores || 0" icon="pi pi-microchip" />
+    <app-stat-card label="Memória (GB)" [value]="server.memoryGb || 0" icon="pi pi-database" />
+  </section>
+
+  <div class="cols">
+    <app-card title="Resumo técnico" icon="pi pi-info-circle">
+      <dl>
+        <dt>Status</dt><dd><app-status-badge [value]="server.status" /></dd>
+        <dt>Tipo</dt><dd>{{ typeLabel(server.serverType) }}</dd>
+        <dt>Sistema</dt><dd>{{ server.operatingSystem || '-' }}</dd>
+        <dt>Provedor</dt><dd>{{ server.supplierName || '-' }}</dd>
+        <dt>Armazenamento</dt><dd>{{ server.storageGb || 0 }} GB</dd>
+        <dt>Backup</dt>
+        <dd>
+          {{ server.backupPolicy || 'Sem política definida' }}
+          @if (!server.lastBackupAt) { <span class="warn">— sem registro de backup</span> }
+        </dd>
+        <dt>Responsável</dt>
+        <dd>
+          {{ server.technicalResponsibleName || 'Sem responsável técnico' }}
+        </dd>
+      </dl>
+    </app-card>
+
+    <app-card title="Timeline do servidor" icon="pi pi-history">
+      <app-timeline-list [events]="events()" />
+    </app-card>
+
+    <app-documents-panel entityType="Server" [entityId]="server.id" [disabled]="demoMode" />
+  </div>
+} @else {
+  <app-page-header title="servers.detailTitle" icon="pi pi-server">
+    <p-button label="Voltar" icon="pi pi-arrow-left" routerLink="/servers" severity="secondary" [outlined]="true" size="small" />
+  </app-page-header>
+  <p class="empty">Servidor não encontrado.</p>
+}
+
+
+@if (data(); as server) {
+  <app-server-costs-form
+    [visible]="dialog() === 'costs'"
+    [serverId]="server.id"
+    [currency]="server.currency"
+    [current]="currentCosts()"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-resize-form
+    [visible]="dialog() === 'resize'"
+    [serverId]="server.id"
+    [current]="currentSpecs()"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-reason-form
+    [visible]="dialog() === 'decommission'"
+    title="forms.decommission"
+    fieldId="srv-decommission"
+    submitLabel="actions.decommission"
+    submitIcon="pi pi-power-off"
+    [warning]="'O servidor ' + server.name + ' deixará de contar nos custos ativos.'"
+    successMessage="feedback.serverDecommissioned"
+    [action]="decommissionAction"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-server-edit-form
+    [visible]="dialog() === 'edit'"
+    [server]="server"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-delete-dialog
+    [visible]="dialog() === 'delete'"
+    [itemName]="server.name"
+    [action]="deleteAction"
+    (deleted)="afterDelete()"
+    (deactivateInstead)="open('decommission')"
+    (cancelled)="close()"
+  />
+}

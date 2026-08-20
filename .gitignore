@@ -1,0 +1,38 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node/Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+
+# .NET
+backend/**/bin/
+backend/**/obj/
+backend/TestResults/
+backend/coverage/
+
+# Ambiente e secrets
+.env
+.env.*
+!.env.example
+!*.env.example
+appsettings.*.local.json
+secrets.json
+
+# A connection string de desenvolvimento contem senha local.
+backend/src/ControleAtivos.Api/appsettings.Development.json
+
+# IDE
+.idea/
+.vscode/.ropeproject
+
+# Anexos gravados em disco: conteudo de usuario, nunca versionado.
+storage/
+**/storage/documents/

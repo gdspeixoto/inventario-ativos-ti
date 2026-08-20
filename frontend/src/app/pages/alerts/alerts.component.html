@@ -1,0 +1,86 @@
+<app-page-header title="alerts.title" description="alerts.subtitle" icon="pi pi-bell"
+  ><p-button
+    label="Executar varredura"
+    icon="pi pi-search"
+    size="small"
+    (onClick)="scan()" /></app-page-header
+>@if (demoMode) { <app-demo-notice /> }
+
+<app-card title="Alertas ativos" icon="pi pi-exclamation-triangle" [flush]="true"
+  >@if (items().length === 0) {
+    <p class="empty">Nenhum alerta em aberto.</p>
+  } @else {
+  <p-table [value]="items()" [tableStyle]="{ 'min-width': '70rem' }"
+    ><ng-template #header
+      ><tr>
+        <th>Alerta</th>
+        <th>Tipo</th>
+        <th>Prioridade</th>
+        <th>Unidade</th>
+        <th>Prazo</th>
+        <th>Status</th>
+        <th><span class="sr-only">Ações</span></th>
+      </tr></ng-template
+    ><ng-template #body let-item
+      ><tr>
+        <td>
+          {{ item.title }}<small>{{ item.recommendedAction }}</small>
+        </td>
+        <td>{{ typeLabel(item.type) }}</td>
+        <td><app-status-badge [value]="item.priority" [priority]="item.priority" /></td>
+        <td>{{ item.organizationalUnitName }}</td>
+        <td>{{ item.dueDate ? (item.dueDate | date: 'dd/MM/yyyy') : '-' }}</td>
+        <td><app-status-badge [value]="item.status" /></td>
+        <td class="actions">
+          @if (item.status === 'Aberto' || item.status === 'EmAnalise') {
+            <p-button
+              icon="pi pi-check"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="success"
+              ariaLabel="Resolver alerta"
+              [disabled]="demoMode"
+              (onClick)="open('resolve', item)"
+            />
+            <p-button
+              icon="pi pi-eye-slash"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="secondary"
+              ariaLabel="Ignorar alerta"
+              [disabled]="demoMode"
+              (onClick)="open('ignore', item)"
+            />
+          }
+        </td></tr></ng-template></p-table
+>  }
+</app-card>
+
+@if (selected(); as item) {
+  <app-reason-form
+    [visible]="dialog() === 'resolve'"
+    title="forms.resolveAlert"
+    fieldLabel="alerts.notes"
+    fieldId="resolve"
+    submitLabel="actions.resolve"
+    successMessage="feedback.alertResolved"
+    [action]="resolveAction"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-reason-form
+    [visible]="dialog() === 'ignore'"
+    title="forms.ignoreAlert"
+    fieldLabel="alerts.justification"
+    fieldId="ignore"
+    submitLabel="actions.ignore"
+    submitIcon="pi pi-eye-slash"
+    successMessage="feedback.alertIgnored"
+    [action]="ignoreAction"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+}

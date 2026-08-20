@@ -1,0 +1,130 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.app-sidebar {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  background-color: var(--app-color-sidebar-bg);
+}
+
+.app-sidebar__scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: tokens.spacing(sm) tokens.spacing(xs);
+}
+
+.app-sidebar__section + .app-sidebar__section {
+  margin-top: tokens.spacing(md);
+  padding-top: tokens.spacing(md);
+  border-top: 1px solid var(--app-color-border-subtle);
+}
+
+.app-sidebar__section-label {
+  padding: 0 tokens.spacing(sm);
+  margin-bottom: tokens.spacing(2xs);
+  color: var(--app-color-text-muted);
+  font-size: var(--app-font-size-2xs);
+  font-weight: var(--app-font-weight-semibold);
+  letter-spacing: var(--app-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.app-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-sidebar__list--nested {
+  margin-top: 2px;
+  padding-left: calc(tokens.spacing(md) + 0.35rem);
+}
+
+.app-sidebar__item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: tokens.spacing(sm);
+  padding: 0.5rem tokens.spacing(sm);
+  border: 0;
+  border-radius: tokens.radius(md);
+  background: none;
+  color: var(--app-color-text-secondary);
+  font-family: inherit;
+  font-size: var(--app-font-size-sm);
+  font-weight: var(--app-font-weight-medium);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--app-transition),
+    color var(--app-transition);
+
+  &:hover {
+    background-color: var(--app-color-surface-hover);
+    color: var(--app-color-text);
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include tokens.focus-ring(-2px);
+  }
+}
+
+.app-sidebar__item--active {
+  background-color: var(--app-color-sidebar-item-active-bg);
+  color: var(--app-color-sidebar-item-active-text);
+
+  .app-sidebar__icon {
+    color: inherit;
+  }
+}
+
+.app-sidebar__icon {
+  flex: 0 0 auto;
+  width: 1rem;
+  color: var(--app-color-text-muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.app-sidebar__label {
+  @include tokens.truncate;
+
+  flex: 1;
+}
+
+.app-sidebar__chevron {
+  flex: 0 0 auto;
+  color: var(--app-color-text-muted);
+  font-size: 0.65rem;
+}
+
+.app-sidebar__badge {
+  padding: 0.05rem 0.4rem;
+  border-radius: tokens.radius(pill);
+  background-color: var(--app-color-primary-subtle);
+  color: var(--app-color-primary);
+  font-size: var(--app-font-size-2xs);
+  font-weight: var(--app-font-weight-semibold);
+}
+
+/* Rail mode: icons only, centred, labels moved into tooltips. */
+.app-sidebar--rail {
+  .app-sidebar__item {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .app-sidebar__section-label {
+    display: none;
+  }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <title>Template Corporativo</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Base para os sistemas internos da empresa" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#2563eb" />
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+
+    <!--
+      Inter, loaded from Google Fonts. Self-host it (or drop the link and keep
+      the system stack in `--app-font-sans`) if the network is restricted.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Applies the persisted theme before Angular boots, so a dark-mode user
+      never sees a white flash. Kept inline and tiny on purpose; the
+      ThemeService takes over as soon as the application starts.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('app:theme.preference') || 'null');
+          var mode = stored && stored.mode ? stored.mode : 'system';
+          var dark =
+            mode === 'dark' ||
+            (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+          if (stored && stored.density) {
+            document.documentElement.setAttribute('data-density', stored.density);
+          }
+        } catch (error) {
+          /* Storage blocked — fall back to the light theme already in the markup. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

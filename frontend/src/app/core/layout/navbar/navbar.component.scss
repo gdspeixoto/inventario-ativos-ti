@@ -1,0 +1,57 @@
+@use 'tokens' as tokens;
+
+.app-navbar {
+  display: flex;
+  height: var(--app-navbar-height);
+  align-items: center;
+  gap: tokens.spacing(md);
+  padding-inline: tokens.spacing(sm);
+  border-bottom: 1px solid var(--app-color-navbar-border);
+  background-color: var(--app-color-navbar-bg);
+}
+
+.app-navbar__left {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: tokens.spacing(2xs);
+}
+
+.app-navbar__brand {
+  padding: tokens.spacing(2xs);
+  border-radius: tokens.radius(md);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    @include tokens.focus-ring(-2px);
+  }
+}
+
+.app-navbar__search {
+  flex: 1;
+  max-width: 32rem;
+  margin-inline: auto;
+
+  input {
+    width: 100%;
+    font-size: var(--app-font-size-sm);
+  }
+}
+
+.app-navbar__right {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  gap: tokens.spacing(2xs);
+}
+
+/* The search box is the first thing to go on small screens. */
+@media (width < 64rem) {
+  .app-navbar__search {
+    display: none;
+  }
+}

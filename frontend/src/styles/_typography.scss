@@ -1,0 +1,92 @@
+/**
+ * Typographic scale. Headings are deliberately restrained — corporate consoles
+ * lean on weight and spacing, not size, to build hierarchy.
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--app-color-text);
+  font-weight: var(--app-font-weight-semibold);
+  line-height: var(--app-line-height-tight);
+  letter-spacing: var(--app-letter-spacing-tight);
+}
+
+h1 {
+  font-size: var(--app-font-size-2xl);
+}
+
+h2 {
+  font-size: var(--app-font-size-xl);
+}
+
+h3 {
+  font-size: var(--app-font-size-lg);
+}
+
+h4,
+h5,
+h6 {
+  font-size: var(--app-font-size-md);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--app-color-link);
+  text-decoration: none;
+  transition: color var(--app-transition);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+small {
+  font-size: var(--app-font-size-xs);
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--app-font-mono);
+  font-size: 0.9em;
+}
+
+code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--app-radius-sm);
+  background-color: var(--app-color-surface-sunken);
+  color: var(--app-color-text-secondary);
+}
+
+/* Utility text roles used across pages. */
+.text-title {
+  font-size: var(--app-font-size-2xl);
+  font-weight: var(--app-font-weight-semibold);
+}
+
+.text-subtitle {
+  color: var(--app-color-text-secondary);
+  font-size: var(--app-font-size-md);
+}
+
+.text-caption {
+  color: var(--app-color-text-muted);
+  font-size: var(--app-font-size-xs);
+}
+
+.text-overline {
+  color: var(--app-color-text-muted);
+  font-size: var(--app-font-size-2xs);
+  font-weight: var(--app-font-weight-semibold);
+  letter-spacing: var(--app-letter-spacing-wide);
+  text-transform: uppercase;
+}

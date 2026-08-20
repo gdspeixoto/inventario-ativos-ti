@@ -1,0 +1,89 @@
+/**
+ * Theme-agnostic design tokens: spacing, radius, elevation, typography, motion,
+ * layering. Identical in light and dark mode — only color changes between themes.
+ */
+
+:root {
+  /* ---------------------------------------------------------------- Spacing */
+  --app-spacing-2xs: 0.25rem; /*  4px */
+  --app-spacing-xs: 0.5rem; /*  8px */
+  --app-spacing-sm: 0.75rem; /* 12px */
+  --app-spacing-md: 1rem; /* 16px */
+  --app-spacing-lg: 1.5rem; /* 24px */
+  --app-spacing-xl: 2rem; /* 32px */
+  --app-spacing-2xl: 3rem; /* 48px */
+  --app-spacing-3xl: 4rem; /* 64px */
+
+  /* ----------------------------------------------------------------- Radius */
+  /* Corporate UI: restrained rounding. Nothing above 8px except pills. */
+  --app-radius-none: 0;
+  --app-radius-sm: 2px;
+  --app-radius-md: 4px;
+  --app-radius-lg: 8px;
+  --app-radius-pill: 999px;
+
+  /* -------------------------------------------------------------- Elevation */
+  --app-shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 6%);
+  --app-shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 8%), 0 1px 2px -1px rgb(15 23 42 / 6%);
+  --app-shadow-md: 0 4px 12px -2px rgb(15 23 42 / 10%), 0 2px 6px -2px rgb(15 23 42 / 6%);
+  --app-shadow-lg: 0 12px 32px -8px rgb(15 23 42 / 16%), 0 4px 12px -4px rgb(15 23 42 / 8%);
+
+  /* ------------------------------------------------------------- Typography */
+  --app-font-sans:
+    'Inter', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', arial, sans-serif;
+  --app-font-mono: 'JetBrains Mono', 'SFMono-Regular', 'Consolas', monospace;
+
+  --app-font-size-2xs: 0.6875rem; /* 11px */
+  --app-font-size-xs: 0.75rem; /* 12px */
+  --app-font-size-sm: 0.8125rem; /* 13px */
+  --app-font-size-md: 0.875rem; /* 14px — base for dense corporate UI */
+  --app-font-size-lg: 1rem; /* 16px */
+  --app-font-size-xl: 1.25rem; /* 20px */
+  --app-font-size-2xl: 1.5rem; /* 24px */
+  --app-font-size-3xl: 1.875rem; /* 30px */
+
+  --app-font-weight-regular: 400;
+  --app-font-weight-medium: 500;
+  --app-font-weight-semibold: 600;
+  --app-font-weight-bold: 700;
+
+  --app-line-height-tight: 1.25;
+  --app-line-height-normal: 1.5;
+  --app-line-height-relaxed: 1.7;
+
+  --app-letter-spacing-tight: -0.01em;
+  --app-letter-spacing-wide: 0.04em;
+
+  /* ----------------------------------------------------------------- Motion */
+  --app-duration-fast: 120ms;
+  --app-duration-normal: 200ms;
+  --app-duration-slow: 320ms;
+  --app-easing-standard: cubic-bezier(0.2, 0, 0.2, 1);
+  --app-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --app-transition: var(--app-duration-normal) var(--app-easing-standard);
+
+  /* --------------------------------------------------------------- Layering */
+  --app-z-base: 0;
+  --app-z-sticky: 100;
+  --app-z-navbar: 900;
+  --app-z-sidebar: 800;
+  --app-z-overlay: 1000;
+  --app-z-modal: 1100;
+  --app-z-toast: 1200;
+
+  /* --------------------------------------------------------------- Layout */
+  --app-navbar-height: 3.5rem; /* 56px */
+  --app-sidebar-width: 15rem; /* 240px */
+  --app-sidebar-width-collapsed: 3.5rem; /* 56px */
+  --app-content-max-width: 90rem; /* 1440px */
+  --app-focus-ring-width: 2px;
+  --app-focus-ring-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --app-duration-fast: 0ms;
+    --app-duration-normal: 0ms;
+    --app-duration-slow: 0ms;
+  }
+}

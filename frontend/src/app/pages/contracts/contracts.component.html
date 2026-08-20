@@ -1,0 +1,131 @@
+<app-page-header title="contracts.title" description="contracts.subtitle" icon="pi pi-file-edit">
+  <p-button
+    label="Novo contrato"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="open('create')"
+  />
+  <p-button label="Atualizar" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="load()" />
+</app-page-header>
+
+@if (demoMode) { <app-demo-notice /> }
+
+<app-card title="contracts.listTitle" icon="pi pi-file-edit" [flush]="true">
+  @if (records.isLoading() && !records.data()) {
+    <app-loading message="common.loading" />
+  } @else if (records.hasError()) {
+    <app-error-state [error]="records.error()" (retry)="load()" />
+  } @else if (items().length === 0) {
+    <p class="empty">Nenhum contrato encontrado.</p>
+  } @else {
+    <p-table [value]="items()" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '70rem' }">
+      <ng-template #header>
+        <tr>
+          <th scope="col">Contrato</th><th scope="col">Fornecedor</th><th scope="col">Categoria</th>
+          <th scope="col">Mensal</th><th scope="col">Anual</th><th scope="col">Vencimento</th><th scope="col">Status</th>
+          <th scope="col"><span class="sr-only">Ações</span></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>{{ item.number }}<small>{{ item.name }} · {{ item.organizationalUnitName }}</small></td>
+          <td>{{ item.supplierName }}</td>
+          <td>{{ item.category }}</td>
+          <td><app-money [amount]="item.monthlyAmount" /></td>
+          <td><app-money [amount]="item.annualAmount" /></td>
+          <td [class.expiring]="item.daysUntilExpiration <= 30">
+            {{ item.endDate | date: 'dd/MM/yyyy' }}<small>{{ item.daysUntilExpiration }} dias</small>
+          </td>
+          <td><app-status-badge [value]="item.status" /></td>
+          <td class="actions">
+            <p-button
+              icon="pi pi-dollar"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Aplicar reajuste"
+              (onClick)="open('adjustment', item)"
+            />
+            <p-button
+              icon="pi pi-refresh"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Renovar contrato"
+              (onClick)="open('renew', item)"
+            />
+            <p-button
+              icon="pi pi-ban"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="danger"
+              ariaLabel="Encerrar contrato"
+              (onClick)="open('terminate', item)"
+            />
+            <!--
+              Excluir fica por último e visualmente à parte: encerrar é o que se
+              faz com um contrato que valeu; excluir só serve para desfazer um
+              cadastro equivocado.
+            -->
+            <p-button
+              icon="pi pi-trash"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="danger"
+              ariaLabel="Excluir contrato"
+              (onClick)="open('delete', item)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</app-card>
+
+<app-contract-form
+  [visible]="dialog() === 'create'"
+  [units]="units()"
+  [suppliers]="suppliers()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+@if (selected(); as item) {
+  <app-price-adjustment-form
+    [visible]="dialog() === 'adjustment'"
+    target="contract"
+    [targetId]="item.id"
+    [targetName]="item.number"
+    [currentAmount]="item.monthlyAmount"
+    [currency]="item.currency"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-renew-contract-form
+    [visible]="dialog() === 'renew'"
+    [contractId]="item.id"
+    [currentEndDate]="item.endDate"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-terminate-contract-form
+    [visible]="dialog() === 'terminate'"
+    [contractId]="item.id"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+
+  <app-delete-dialog
+    [visible]="dialog() === 'delete'"
+    [itemName]="item.number"
+    [action]="deleteAction"
+    (deleted)="afterSave()"
+    (deactivateInstead)="open('terminate', item)"
+    (cancelled)="close()"
+  />
+}

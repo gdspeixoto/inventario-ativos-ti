@@ -1,0 +1,60 @@
+/**
+ * Light theme — semantic color tokens.
+ *
+ * Applied when <html data-theme="light">, and also as the fallback on :root so
+ * the page never flashes an unstyled state before the ThemeService boots.
+ */
+
+@mixin light-tokens {
+  color-scheme: light;
+
+  /* ---------------------------------------------------------------- Brand */
+  --app-color-primary: var(--app-palette-brand-600);
+  --app-color-primary-hover: var(--app-palette-brand-700);
+  --app-color-primary-active: var(--app-palette-brand-800);
+  --app-color-primary-contrast: var(--app-palette-neutral-0);
+  --app-color-primary-subtle: var(--app-palette-brand-50);
+  --app-color-primary-border: var(--app-palette-brand-200);
+
+  /* ------------------------------------------------------------- Surfaces */
+  --app-color-background: var(--app-palette-neutral-100);
+  --app-color-surface: var(--app-palette-neutral-0);
+  --app-color-surface-hover: var(--app-palette-neutral-100);
+  --app-color-surface-active: var(--app-palette-neutral-200);
+  --app-color-surface-sunken: var(--app-palette-neutral-50);
+  --app-color-card: var(--app-palette-neutral-0);
+  --app-color-overlay: rgb(15 23 42 / 45%);
+  --app-color-backdrop: rgb(15 23 42 / 32%);
+
+  /* ----------------------------------------------------------------- Text */
+  --app-color-text: var(--app-palette-neutral-900);
+  --app-color-text-secondary: var(--app-palette-neutral-600);
+  --app-color-text-muted: var(--app-palette-neutral-500);
+  --app-color-text-inverse: var(--app-palette-neutral-0);
+  --app-color-text-on-primary: var(--app-palette-neutral-0);
+  --app-color-link: var(--app-palette-brand-700);
+
+  /* -------------------------------------------------------------- Borders */
+  --app-color-border: var(--app-palette-neutral-200);
+  --app-color-border-strong: var(--app-palette-neutral-300);
+  --app-color-border-subtle: var(--app-palette-neutral-100);
+  --app-color-focus-ring: var(--app-palette-brand-500);
+
+  /* --------------------------------------------------------------- Status */
+  --app-color-success: var(--app-palette-success-600);
+  --app-color-success-subtle: var(--app-palette-success-100);
+  --app-color-warning: var(--app-palette-warning-600);
+  --app-color-warning-subtle: var(--app-palette-warning-100);
+  --app-color-danger: var(--app-palette-danger-600);
+  --app-color-danger-subtle: var(--app-palette-danger-100);
+  --app-color-info: var(--app-palette-info-600);
+  --app-color-info-subtle: var(--app-palette-info-100);
+
+  /* ------------------------------------------------------- Layout chrome */
+  --app-color-navbar-bg: var(--app-palette-neutral-0);
+  --app-color-navbar-border: var(--app-palette-neutral-200);
+  --app-color-sidebar-bg: var(--app-palette-neutral-0);
+  --app-color-sidebar-border: var(--app-palette-neutral-200);
+  --app-color-sidebar-item-active-bg: var(--app-palette-brand-50);
+  --app-color-sidebar-item-active-text: var(--app-palette-brand-700);
+}

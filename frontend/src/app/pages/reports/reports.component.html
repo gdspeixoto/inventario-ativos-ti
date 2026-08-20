@@ -1,0 +1,71 @@
+<app-page-header title="reports.title" description="reports.subtitle" icon="pi pi-chart-line">
+  <p-button label="Atualizar" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="load()" />
+</app-page-header>
+
+@if (demoMode) { <app-demo-notice /> }
+
+<div class="cols">
+  <app-card title="Evolução de custos (12 meses)" icon="pi pi-chart-line">
+    @if (evolution.isLoading() && !evo()) {
+      <app-loading message="common.loading" />
+    } @else if (evolution.hasError()) {
+      <app-error-state [error]="evolution.error()" (retry)="load()" />
+    } @else if (evo(); as evolutionData) {
+      <div class="chart">
+        @for (point of evolutionData.history; track point.label) {
+          <div>
+            <span>{{ point.label }}</span>
+            <i [style.height.%]="evolutionData.currentMonthlyCost ? (point.amount / evolutionData.currentMonthlyCost) * 100 : 0"></i>
+            <small>{{ point.amount | currency: 'BRL' : 'symbol' : '1.0-0' : 'pt-BR' }}</small>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="empty">Sem histórico de custos.</p>
+    }
+  </app-card>
+
+  <app-card title="Licenças com baixa utilização" icon="pi pi-id-card" [flush]="true">
+    @if (lic().length === 0) {
+      <p class="empty">Nenhuma licença ociosa identificada.</p>
+    } @else {
+      <p-table [value]="lic()" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+          <tr><th scope="col">Licença</th><th scope="col">Utilização</th><th scope="col">Economia potencial</th></tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr>
+            <td>{{ item.name }}<small>{{ item.organizationalUnitName }}</small></td>
+            <td>
+              {{ item.usedQuantity }}/{{ item.contractedQuantity }} ·
+              {{ item.utilizationRate | number: '1.0-2' : 'pt-BR' }}%
+            </td>
+            <td><app-money [amount]="item.potentialMonthlySavings" /></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </app-card>
+</div>
+
+<app-card title="Contratos vencendo em 90 dias" icon="pi pi-calendar-clock" [flush]="true">
+  @if (ct().length === 0) {
+    <p class="empty">Nenhum contrato vencendo no período.</p>
+  } @else {
+    <p-table [value]="ct()">
+      <ng-template #header>
+        <tr><th scope="col">Contrato</th><th scope="col">Fornecedor</th><th scope="col">Vencimento</th><th scope="col">Mensal</th></tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>{{ item.number }} · {{ item.name }}</td>
+          <td>{{ item.supplierName }}</td>
+          <td [class.expiring]="item.daysUntilExpiration <= 30">
+            {{ item.endDate | date: 'dd/MM/yyyy' }} · {{ item.daysUntilExpiration }} dias
+          </td>
+          <td><app-money [amount]="item.monthlyAmount" /></td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</app-card>

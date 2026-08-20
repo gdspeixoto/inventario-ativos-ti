@@ -1,0 +1,64 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+}
+
+.settings__grid {
+  display: grid;
+  gap: tokens.spacing(lg);
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  align-items: start;
+}
+
+.settings__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: tokens.spacing(sm);
+  padding-block: tokens.spacing(sm);
+
+  & + & {
+    border-top: 1px solid var(--app-color-border-subtle);
+  }
+}
+
+.settings__label {
+  color: var(--app-color-text-secondary);
+  font-size: var(--app-font-size-sm);
+  font-weight: var(--app-font-weight-medium);
+}
+
+.settings__list {
+  display: flex;
+  flex-direction: column;
+  gap: tokens.spacing(sm);
+  margin: 0;
+
+  > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: tokens.spacing(md);
+  }
+
+  dt {
+    color: var(--app-color-text-muted);
+    font-size: var(--app-font-size-xs);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--app-font-size-sm);
+    text-align: right;
+    word-break: break-word;
+  }
+}
+
+.settings__tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}

@@ -1,0 +1,41 @@
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.chart {
+  height: 260px;
+  display: flex;
+  gap: 0.65rem;
+  align-items: end;
+}
+.chart div {
+  flex: 1;
+  display: grid;
+  align-items: end;
+  gap: 0.35rem;
+  text-align: center;
+  font-size: 0.75rem;
+}
+.chart i {
+  display: block;
+  min-height: 18px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, var(--app-color-primary), #38bdf8);
+}
+td small {
+  display: block;
+  color: var(--app-color-text-muted);
+}
+@media (max-width: 900px) {
+  .cols {
+    grid-template-columns: 1fr;
+  }
+  .chart {
+    overflow-x: auto;
+  }
+}
+
+.empty { padding: 2rem; text-align: center; color: var(--app-color-text-muted); }
+.expiring { color: var(--app-color-danger); font-weight: 600; }

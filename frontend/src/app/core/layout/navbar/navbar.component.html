@@ -1,0 +1,46 @@
+<header class="app-navbar">
+  <div class="app-navbar__left">
+    @if (settings.features.collapsibleSidebar) {
+      <p-button
+        type="button"
+        severity="secondary"
+        [text]="true"
+        [rounded]="true"
+        icon="pi pi-bars"
+        [ariaLabel]="'nav.toggleSidebar' | translate"
+        [pTooltip]="'nav.toggleSidebar' | translate"
+        tooltipPosition="bottom"
+        (onClick)="layout.toggleSidebar()"
+      />
+    }
+
+    <a [routerLink]="homeRoute" class="app-navbar__brand">
+      <app-brand-logo size="sm" />
+    </a>
+  </div>
+
+  @if (settings.features.globalSearch) {
+    <div class="app-navbar__search">
+      <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <input
+          pInputText
+          type="search"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          (keyup.enter)="onSearch()"
+          [placeholder]="'common.searchPlaceholder' | translate"
+          [attr.aria-label]="'common.search' | translate"
+        />
+      </p-iconfield>
+    </div>
+  }
+
+  <div class="app-navbar__right">
+    @if (settings.features.languageSwitcher) {
+      <app-language-switcher />
+    }
+    <app-theme-switcher />
+    <app-user-menu />
+  </div>
+</header>

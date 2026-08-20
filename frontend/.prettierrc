@@ -1,0 +1,25 @@
+{
+  "printWidth": 100,
+  "singleQuote": true,
+  "semi": true,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "endOfLine": "lf",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/tailwind.css",
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    },
+    {
+      "files": "*.md",
+      "options": {
+        "proseWrap": "preserve"
+      }
+    }
+  ]
+}

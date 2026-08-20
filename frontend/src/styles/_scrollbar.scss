@@ -1,0 +1,28 @@
+/**
+ * Themed scrollbars. Kept subtle so they read as part of the surface.
+ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--app-color-border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: var(--app-radius-pill);
+  background-color: var(--app-color-border-strong);
+  background-clip: content-box;
+
+  &:hover {
+    background-color: var(--app-color-text-muted);
+  }
+}

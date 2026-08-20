@@ -1,0 +1,34 @@
+<a class="skip-link" href="#main-content">{{ 'common.skipToContent' | translate }}</a>
+
+<div class="app-shell" [class.app-shell--rail]="layout.isRail()">
+  <app-navbar class="app-shell__navbar" />
+
+  @if (loading.isLoading()) {
+    <div class="app-shell__progress" role="progressbar" aria-label="loading"></div>
+  }
+
+  <div class="app-shell__body">
+    <app-sidebar
+      class="app-shell__sidebar"
+      [class.app-shell__sidebar--open]="layout.mobileOpen()"
+      [attr.inert]="layout.isMobile() && !layout.mobileOpen() ? '' : null"
+    />
+
+    @if (layout.isMobile() && layout.mobileOpen()) {
+      <button
+        type="button"
+        class="app-shell__backdrop"
+        tabindex="-1"
+        aria-hidden="true"
+        (click)="layout.closeMobileSidebar()"
+      ></button>
+    }
+
+    <main id="main-content" class="app-shell__main" tabindex="-1">
+      <div class="app-shell__content">
+        <router-outlet />
+      </div>
+      <app-footer />
+    </main>
+  </div>
+</div>

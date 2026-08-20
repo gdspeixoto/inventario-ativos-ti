@@ -1,0 +1,69 @@
+/**
+ * Dark theme — semantic color tokens.
+ *
+ * Mirrors `_light.scss` token-for-token: any token added there must be added
+ * here, otherwise dark mode silently inherits the light value.
+ *
+ * Contrast targets: body text >= 7:1 (AAA), secondary text >= 4.5:1 (AA).
+ */
+
+@mixin dark-tokens {
+  color-scheme: dark;
+
+  /* ---------------------------------------------------------------- Brand */
+  /* Lighter brand steps in dark mode — 600 on a dark surface fails contrast. */
+  --app-color-primary: var(--app-palette-brand-400);
+  --app-color-primary-hover: var(--app-palette-brand-300);
+  --app-color-primary-active: var(--app-palette-brand-200);
+  --app-color-primary-contrast: var(--app-palette-neutral-950);
+  --app-color-primary-subtle: rgb(59 130 246 / 14%);
+  --app-color-primary-border: rgb(96 165 250 / 34%);
+
+  /* ------------------------------------------------------------- Surfaces */
+  --app-color-background: var(--app-palette-neutral-950);
+  --app-color-surface: var(--app-palette-neutral-900);
+  --app-color-surface-hover: var(--app-palette-neutral-800);
+  --app-color-surface-active: var(--app-palette-neutral-700);
+  --app-color-surface-sunken: #0b1220;
+  --app-color-card: var(--app-palette-neutral-900);
+  --app-color-overlay: rgb(2 6 23 / 65%);
+  --app-color-backdrop: rgb(2 6 23 / 60%);
+
+  /* ----------------------------------------------------------------- Text */
+  --app-color-text: var(--app-palette-neutral-100);
+  --app-color-text-secondary: var(--app-palette-neutral-400);
+  --app-color-text-muted: var(--app-palette-neutral-500);
+  --app-color-text-inverse: var(--app-palette-neutral-950);
+  --app-color-text-on-primary: var(--app-palette-neutral-950);
+  --app-color-link: var(--app-palette-brand-300);
+
+  /* -------------------------------------------------------------- Borders */
+  --app-color-border: var(--app-palette-neutral-800);
+  --app-color-border-strong: var(--app-palette-neutral-700);
+  --app-color-border-subtle: #131c2e;
+  --app-color-focus-ring: var(--app-palette-brand-400);
+
+  /* --------------------------------------------------------------- Status */
+  --app-color-success: var(--app-palette-success-400);
+  --app-color-success-subtle: var(--app-palette-success-950);
+  --app-color-warning: var(--app-palette-warning-400);
+  --app-color-warning-subtle: var(--app-palette-warning-950);
+  --app-color-danger: var(--app-palette-danger-400);
+  --app-color-danger-subtle: var(--app-palette-danger-950);
+  --app-color-info: var(--app-palette-info-400);
+  --app-color-info-subtle: var(--app-palette-info-950);
+
+  /* ------------------------------------------------------- Layout chrome */
+  --app-color-navbar-bg: var(--app-palette-neutral-900);
+  --app-color-navbar-border: var(--app-palette-neutral-800);
+  --app-color-sidebar-bg: var(--app-palette-neutral-900);
+  --app-color-sidebar-border: var(--app-palette-neutral-800);
+  --app-color-sidebar-item-active-bg: rgb(59 130 246 / 16%);
+  --app-color-sidebar-item-active-text: var(--app-palette-brand-300);
+
+  /* Elevation reads as light bleed rather than shadow on dark surfaces. */
+  --app-shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 40%);
+  --app-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 45%), 0 1px 2px -1px rgb(0 0 0 / 35%);
+  --app-shadow-md: 0 4px 12px -2px rgb(0 0 0 / 50%), 0 2px 6px -2px rgb(0 0 0 / 35%);
+  --app-shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 60%), 0 4px 12px -4px rgb(0 0 0 / 40%);
+}

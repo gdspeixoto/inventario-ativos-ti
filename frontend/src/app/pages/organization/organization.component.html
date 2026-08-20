@@ -1,0 +1,97 @@
+<app-page-header title="organization.title" description="organization.subtitle" icon="pi pi-sitemap"
+  ><p-button
+    label="Nova unidade"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="open('unit')"
+  /><p-button
+    label="Novo vínculo"
+    icon="pi pi-user-plus"
+    size="small"
+    severity="secondary"
+    [outlined]="true"
+    [disabled]="demoMode"
+    (onClick)="open('assignment')"
+  />
+</app-page-header>
+@if (demoMode) { <app-demo-notice /> }
+<div class="cols">
+  <!--
+    A versão anterior desenhava dois níveis fixos, e a hierarquia tem cinco:
+    tudo abaixo de "Área Tecnológica" ficava invisível, junto com o custo
+    correspondente. O nó é recursivo e desenha a profundidade que existir.
+  -->
+  <app-card title="Estrutura organizacional" icon="pi pi-sitemap">
+    @if (nodes().length === 0) {
+      <p class="tree__empty">Nenhuma unidade cadastrada.</p>
+    } @else {
+      <div class="tree">
+        @for (node of nodes(); track node.id) {
+          <app-unit-tree-node [node]="node" />
+        }
+      </div>
+    }
+  </app-card><app-card title="Atribuições gerenciais" icon="pi pi-users" [flush]="true"
+    ><p-table [value]="assignments()" [tableStyle]="{ 'min-width': '58rem' }"
+      ><ng-template #header
+        ><tr>
+          <th>Usuário</th>
+          <th>Unidade</th>
+          <th>Papel</th>
+          <th>Escopo</th>
+          <th>Status</th>
+          <th><span class="sr-only">Ações</span></th>
+        </tr></ng-template
+      ><ng-template #body let-item
+        ><tr>
+          <td>
+            {{ item.userDisplayName }}<small>{{ item.userEmail }}</small>
+          </td>
+          <td>
+            {{ item.organizationalUnitName }}
+          </td>
+          <td>{{ roleLabel(item.role) }}</td>
+          <td>{{ item.includesDescendants ? 'Inclui descendentes' : 'Somente unidade' }}</td>
+          <td>
+            <app-status-badge [value]="item.isActive ? 'Ativo' : 'Encerrado'" />
+          </td>
+          <td class="actions">
+            @if (item.isActive) {
+              <p-button
+                icon="pi pi-sign-out"
+                [text]="true"
+                [rounded]="true"
+                size="small"
+                ariaLabel="Encerrar vínculo"
+                [disabled]="demoMode"
+                (onClick)="open('finish', item)"
+              />
+            }
+          </td></tr></ng-template></p-table
+  ></app-card>
+</div>
+
+<app-unit-form
+  [visible]="dialog() === 'unit'"
+  [units]="nodes()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+<app-assignment-form
+  [visible]="dialog() === 'assignment'"
+  [units]="nodes()"
+  [assignments]="assignments()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+@if (selectedAssignment(); as item) {
+  <app-finish-assignment-form
+    [visible]="dialog() === 'finish'"
+    [assignmentId]="item.id"
+    (saved)="afterSave()"
+    (closed)="close()"
+  />
+}

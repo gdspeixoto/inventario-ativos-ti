@@ -1,0 +1,118 @@
+<div class="login">
+  <div class="login__utilities">
+    <app-language-switcher />
+    <app-theme-switcher />
+  </div>
+
+  <main class="login__card app-surface" [attr.aria-label]="'auth.signIn' | translate">
+    <header class="login__header">
+      <app-brand-logo size="lg" [showName]="false" />
+      <h1 class="login__title">{{ settings.name }}</h1>
+      <p class="login__description">{{ settings.description }}</p>
+    </header>
+
+    @if (errorKey(); as key) {
+      <p-message severity="error" styleClass="login__alert" [text]="key | translate" />
+    }
+
+    @if (showCredentials) {
+      <form class="login__form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <div class="login__field">
+          <label for="username">{{ 'auth.username' | translate }}</label>
+          <p-iconfield>
+            <p-inputicon class="pi pi-user" />
+            <input
+              pInputText
+              id="username"
+              type="text"
+              formControlName="username"
+              autocomplete="username"
+              appAutofocus
+              [placeholder]="'auth.usernamePlaceholder' | translate"
+              [attr.aria-invalid]="hasError('username', 'required')"
+              [attr.aria-describedby]="'username-error'"
+            />
+          </p-iconfield>
+
+          <span id="username-error" class="login__error" role="alert">
+            @if (hasError('username', 'required')) {
+              {{ 'auth.validation.usernameRequired' | translate }}
+            }
+          </span>
+        </div>
+
+        <div class="login__field">
+          <label for="password">{{ 'auth.password' | translate }}</label>
+          <p-password
+            inputId="password"
+            formControlName="password"
+            styleClass="login__password"
+            [feedback]="false"
+            [toggleMask]="true"
+            [fluid]="true"
+            autocomplete="current-password"
+            [placeholder]="'auth.passwordPlaceholder' | translate"
+          />
+
+          <span id="password-error" class="login__error" role="alert">
+            @if (hasError('password', 'required')) {
+              {{ 'auth.validation.passwordRequired' | translate }}
+            } @else if (hasError('password', 'minlength')) {
+              {{ 'auth.validation.passwordMinLength' | translate: { min: minPasswordLength } }}
+            }
+          </span>
+        </div>
+
+        @if (forgotPasswordUrl) {
+          <a class="login__forgot" [href]="forgotPasswordUrl">
+            {{ 'auth.forgotPassword' | translate }}
+          </a>
+        }
+
+        <p-button
+          type="submit"
+          styleClass="login__submit"
+          [label]="(submitting() ? 'auth.signingIn' : 'auth.signIn') | translate"
+          [loading]="submitting()"
+          [disabled]="isBusy()"
+          [fluid]="true"
+        />
+      </form>
+    }
+
+    @if (showSeparator()) {
+      <div class="login__separator">
+        <span>{{ 'auth.continueWith' | translate }}</span>
+      </div>
+    }
+
+    @if (providers().length) {
+      <div class="login__providers">
+        @for (provider of providers(); track provider.id) {
+          <button
+            type="button"
+            class="login__provider"
+            [disabled]="isBusy()"
+            [style.--provider-accent]="provider.branding.accentColor || null"
+            (click)="loginWith(provider.id)"
+          >
+            @if (pendingProvider() === provider.id) {
+              <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+            } @else {
+              <i class="{{ provider.branding.icon || 'pi pi-shield' }}" aria-hidden="true"></i>
+            }
+            <span>{{ providerLabel(provider.branding.label) }}</span>
+          </button>
+        }
+      </div>
+    }
+  </main>
+
+  <p class="login__footer">
+    {{ settings.name }} · {{ 'common.version' | translate }} {{ settings.version }}
+  </p>
+</div>
+
+<aside class="login__showcase">
+  <app-login-showcase />
+</aside>

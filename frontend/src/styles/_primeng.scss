@@ -1,0 +1,103 @@
+/**
+ * PrimeNG bridge.
+ *
+ * Component colors come from the runtime preset (`core/theme/primeng-preset.ts`),
+ * which already maps PrimeNG's `--p-*` variables onto our design tokens.
+ * This file only holds the handful of *structural* adjustments that a preset
+ * cannot express — density, borders and the corporate low-radius look.
+ *
+ * Rule of thumb: if it is a color, fix it in the preset. If it is a box, fix it here.
+ */
+
+/* ------------------------------------------------------------------ Surface */
+.p-card {
+  border: 1px solid var(--app-color-border);
+  box-shadow: var(--app-shadow-xs);
+
+  .p-card-body {
+    padding: var(--app-spacing-lg);
+  }
+
+  .p-card-title {
+    font-size: var(--app-font-size-lg);
+    font-weight: var(--app-font-weight-semibold);
+  }
+
+  .p-card-subtitle {
+    color: var(--app-color-text-secondary);
+    font-size: var(--app-font-size-sm);
+  }
+}
+
+/* ------------------------------------------------------------------ Buttons */
+.p-button {
+  font-weight: var(--app-font-weight-medium);
+  transition:
+    background-color var(--app-transition),
+    border-color var(--app-transition),
+    color var(--app-transition);
+
+  &:focus-visible {
+    outline-offset: var(--app-focus-ring-offset);
+  }
+}
+
+/* ------------------------------------------------------------------- Inputs */
+.p-inputtext,
+.p-password-input,
+.p-select,
+.p-multiselect,
+.p-textarea {
+  width: 100%;
+  transition:
+    border-color var(--app-transition),
+    box-shadow var(--app-transition);
+}
+
+.p-iconfield .p-inputicon {
+  color: var(--app-color-text-muted);
+}
+
+/* --------------------------------------------------------------- Data views */
+.p-datatable {
+  .p-datatable-thead > tr > th {
+    background-color: var(--app-color-surface-sunken);
+    color: var(--app-color-text-secondary);
+    font-size: var(--app-font-size-xs);
+    font-weight: var(--app-font-weight-semibold);
+    letter-spacing: var(--app-letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  .p-datatable-tbody > tr > td {
+    font-size: var(--app-font-size-sm);
+  }
+}
+
+/* ------------------------------------------------------------------ Overlay */
+.p-toast .p-toast-message {
+  border-radius: var(--app-radius-md);
+  box-shadow: var(--app-shadow-lg);
+}
+
+.p-dialog {
+  border: 1px solid var(--app-color-border);
+  box-shadow: var(--app-shadow-lg);
+}
+
+.p-menu,
+.p-tieredmenu,
+.p-popover {
+  border: 1px solid var(--app-color-border);
+  box-shadow: var(--app-shadow-md);
+}
+
+/* PrimeNG renders overlays at <body> level: keep them above the app chrome. */
+.p-toast {
+  z-index: var(--app-z-toast) !important;
+}
+
+.p-dialog-mask,
+.p-drawer-mask {
+  z-index: var(--app-z-modal) !important;
+}

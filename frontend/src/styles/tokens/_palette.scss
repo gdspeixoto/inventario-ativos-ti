@@ -1,0 +1,63 @@
+/**
+ * Raw color scales — the ONLY place in the codebase where a hex value is allowed.
+ *
+ * These are *primitives*: they carry no meaning. Semantic tokens
+ * (`--app-color-primary`, `--app-color-surface`, ...) are built on top of them
+ * in `_light.scss` / `_dark.scss`, and components consume only the semantic layer.
+ *
+ * To rebrand the template, change the `--app-palette-brand-*` ramp below.
+ */
+
+:root {
+  /* Brand ramp — corporate blue. */
+  --app-palette-brand-50: #eff6ff;
+  --app-palette-brand-100: #dbeafe;
+  --app-palette-brand-200: #bfdbfe;
+  --app-palette-brand-300: #93c5fd;
+  --app-palette-brand-400: #60a5fa;
+  --app-palette-brand-500: #3b82f6;
+  --app-palette-brand-600: #2563eb;
+  --app-palette-brand-700: #1d4ed8;
+  --app-palette-brand-800: #1e40af;
+  --app-palette-brand-900: #1e3a8a;
+  --app-palette-brand-950: #172554;
+
+  /* Neutral ramp — slate. Drives surfaces, borders and text. */
+  --app-palette-neutral-0: #ffffff;
+  --app-palette-neutral-50: #f8fafc;
+  --app-palette-neutral-100: #f1f5f9;
+  --app-palette-neutral-200: #e2e8f0;
+  --app-palette-neutral-300: #cbd5e1;
+  --app-palette-neutral-400: #94a3b8;
+  --app-palette-neutral-500: #64748b;
+  --app-palette-neutral-600: #475569;
+  --app-palette-neutral-700: #334155;
+  --app-palette-neutral-800: #1e293b;
+  --app-palette-neutral-900: #0f172a;
+  --app-palette-neutral-950: #020617;
+
+  /* Status ramps — only the steps actually used are declared. */
+  --app-palette-success-100: #dcfce7;
+  --app-palette-success-500: #22c55e;
+  --app-palette-success-600: #16a34a;
+  --app-palette-success-400: #4ade80;
+  --app-palette-success-950: #052e16;
+
+  --app-palette-warning-100: #fef3c7;
+  --app-palette-warning-500: #f59e0b;
+  --app-palette-warning-600: #d97706;
+  --app-palette-warning-400: #fbbf24;
+  --app-palette-warning-950: #451a03;
+
+  --app-palette-danger-100: #fee2e2;
+  --app-palette-danger-500: #ef4444;
+  --app-palette-danger-600: #dc2626;
+  --app-palette-danger-400: #f87171;
+  --app-palette-danger-950: #450a0a;
+
+  --app-palette-info-100: #cffafe;
+  --app-palette-info-500: #06b6d4;
+  --app-palette-info-600: #0891b2;
+  --app-palette-info-400: #22d3ee;
+  --app-palette-info-950: #083344;
+}

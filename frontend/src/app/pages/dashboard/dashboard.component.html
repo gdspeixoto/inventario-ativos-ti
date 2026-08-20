@@ -1,0 +1,65 @@
+<app-page-header title="dashboard.title" description="dashboard.subtitle" icon="pi pi-chart-line">
+  <p-button label="Atualizar" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="load()" />
+</app-page-header>
+
+@if (demoMode) { <app-demo-notice /> }
+
+@if (summary.isLoading() && !data()) {
+  <app-loading message="common.loading" />
+} @else if (summary.hasError()) {
+  <app-error-state [error]="summary.error()" (retry)="load()" />
+} @else if (data(); as summaryData) {
+  <section class="dashboard-grid">
+    <app-stat-card label="Custo mensal atual" [value]="summaryData.currentMonthlyCost" icon="pi pi-wallet" [money]="true" />
+    <app-stat-card label="Custo anual projetado" [value]="summaryData.projectedAnnualCost" icon="pi pi-chart-line" [money]="true" />
+    <app-stat-card
+      label="Licenças ativas"
+      [value]="summaryData.activeLicenses"
+      icon="pi pi-id-card"
+      [hint]="summaryData.totalUsedLicenses + ' em uso de ' + summaryData.totalContractedLicenses"
+    />
+    <app-stat-card label="Servidores ativos" [value]="summaryData.activeServers" icon="pi pi-server" />
+    <app-stat-card label="Contratos vencendo em 30 dias" [value]="summaryData.contractsExpiringIn30Days" icon="pi pi-calendar-clock" />
+    <app-stat-card label="Alertas críticos" [value]="summaryData.criticalAlerts" icon="pi pi-exclamation-triangle" [hint]="summaryData.openAlerts + ' em aberto'" />
+  </section>
+
+  <div class="dashboard-layout">
+    <app-card title="Custos por categoria" icon="pi pi-chart-pie">
+      <div class="bars">
+        @for (item of summaryData.costsByCategory; track item.category) {
+          <div class="bar-row">
+            <span>{{ item.category }}</span>
+            <div class="bar">
+              <i [style.width.%]="summaryData.currentMonthlyCost ? (item.monthlyAmount / summaryData.currentMonthlyCost) * 100 : 0"></i>
+            </div>
+            <app-money [amount]="item.monthlyAmount" />
+          </div>
+        } @empty {
+          <p class="empty">Sem custos registrados no período.</p>
+        }
+      </div>
+    </app-card>
+
+    <app-card title="Top custos recorrentes" icon="pi pi-sort-amount-down" [flush]="true">
+      <p-table [value]="topCosts()" [tableStyle]="{ 'min-width': '34rem' }">
+        <ng-template #header>
+          <tr><th scope="col">Item</th><th scope="col">Tipo</th><th scope="col">Mensal</th><th scope="col">Anual</th></tr>
+        </ng-template>
+        <ng-template #body let-item>
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.kind }}</td>
+            <td><app-money [amount]="item.monthlyAmount" /></td>
+            <td><app-money [amount]="item.annualAmount" /></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </app-card>
+  </div>
+
+  <app-card title="Últimos acontecimentos" icon="pi pi-history">
+    <app-timeline-list [events]="summaryData.latestEvents" />
+  </app-card>
+} @else {
+  <p class="empty">Nenhum dado disponível.</p>
+}

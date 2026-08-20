@@ -1,0 +1,87 @@
+<app-page-header title="suppliers.title" description="suppliers.subtitle" icon="pi pi-building">
+  <p-button
+    label="Novo fornecedor"
+    icon="pi pi-plus"
+    size="small"
+    [disabled]="demoMode"
+    (onClick)="openCreate()"
+  />
+  <p-button label="Atualizar" icon="pi pi-refresh" severity="secondary" [outlined]="true" size="small" (onClick)="load()" />
+</app-page-header>
+
+@if (demoMode) { <app-demo-notice /> }
+
+<app-card title="suppliers.listTitle" icon="pi pi-building" [flush]="true">
+  @if (records.isLoading() && !records.data()) {
+    <app-loading message="common.loading" />
+  } @else if (records.hasError()) {
+    <app-error-state [error]="records.error()" (retry)="load()" />
+  } @else if (items().length === 0) {
+    <p class="empty">Nenhum fornecedor cadastrado.</p>
+  } @else {
+    <p-table [value]="items()" [paginator]="true" [rows]="10" [tableStyle]="{ 'min-width': '70rem' }">
+      <ng-template #header>
+        <tr>
+          <th scope="col">Fornecedor</th><th scope="col">Contato</th><th scope="col">Contratos</th>
+          <th scope="col">Ativos</th><th scope="col">Mensal</th><th scope="col">Anual</th><th scope="col">Status</th>
+          <th scope="col"><span class="sr-only">Ações</span></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-item>
+        <tr>
+          <td>{{ item.name }}<small>{{ item.documentNumber || 'Sem CNPJ' }}</small></td>
+          <td>{{ item.mainContactName || '-' }}<small>{{ item.email || '' }}</small></td>
+          <td>{{ item.activeContracts }}</td>
+          <td>{{ item.linkedAssets }}</td>
+          <td><app-money [amount]="item.monthlyAmount" /></td>
+          <td><app-money [amount]="item.annualAmount" /></td>
+          <td><app-status-badge [value]="item.status" /></td>
+          <td class="actions">
+            <p-button
+              icon="pi pi-pencil"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              ariaLabel="Editar fornecedor"
+              [disabled]="demoMode"
+              (onClick)="openEdit(item)"
+            />
+            <p-button
+              icon="pi pi-trash"
+              [text]="true"
+              [rounded]="true"
+              size="small"
+              severity="danger"
+              ariaLabel="Excluir fornecedor"
+              [disabled]="demoMode"
+              (onClick)="openDelete(item)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</app-card>
+
+<app-supplier-form
+  [visible]="dialogOpen()"
+  [supplier]="editing()"
+  (saved)="afterSave()"
+  (closed)="close()"
+/>
+
+@if (deleting(); as supplier) {
+  <!--
+    Fornecedor com ativos ou contratos não some: a exclusão é recusada e a
+    alternativa é marcá-lo como inativo, para que os registros históricos
+    continuem sabendo de quem se tratava.
+  -->
+  <app-delete-dialog
+    [visible]="true"
+    [itemName]="supplier.name"
+    [action]="deleteAction"
+    (deleted)="afterDelete()"
+    (deactivateInstead)="deactivate(supplier)"
+    (cancelled)="closeDelete()"
+  />
+}

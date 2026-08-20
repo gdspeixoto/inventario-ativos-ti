@@ -1,0 +1,229 @@
+@use 'tokens' as tokens;
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+
+.showcase {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(tokens.spacing(md), 2.5vh, tokens.spacing(lg));
+  padding: clamp(tokens.spacing(lg), 5vh, tokens.spacing(2xl))
+    clamp(tokens.spacing(lg), 4vw, tokens.spacing(xl))
+    clamp(tokens.spacing(lg), 4vh, tokens.spacing(xl));
+  border-radius: tokens.radius(lg);
+  background-color: var(--app-color-primary-active);
+  background-image:
+    radial-gradient(120% 90% at 85% 5%, rgb(255 255 255 / 18%), transparent 55%),
+    linear-gradient(150deg, var(--app-color-primary-active) 10%, var(--app-color-primary) 100%);
+  color: white;
+
+  &:focus-visible {
+    outline: 2px solid white;
+    outline-offset: -4px;
+  }
+}
+
+.showcase__copy {
+  display: flex;
+  max-width: 30rem;
+  flex-direction: column;
+  align-items: center;
+  gap: tokens.spacing(xs);
+  text-align: center;
+}
+
+.showcase__eyebrow {
+  color: rgb(255 255 255 / 72%);
+  font-size: var(--app-font-size-xs);
+  font-weight: var(--app-font-weight-semibold);
+  letter-spacing: var(--app-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.showcase__title {
+  max-width: 30rem;
+  color: inherit;
+  font-size: clamp(var(--app-font-size-2xl), 2.2vw, var(--app-font-size-3xl));
+  line-height: var(--app-line-height-tight);
+}
+
+.showcase__description {
+  max-width: 29rem;
+  color: rgb(255 255 255 / 76%);
+  font-size: clamp(var(--app-font-size-sm), 1.1vw, var(--app-font-size-md));
+  line-height: var(--app-line-height-relaxed);
+}
+
+.showcase__stage {
+  display: flex;
+  width: 100%;
+  max-width: min(38rem, 100%);
+  min-height: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.showcase__art {
+  width: 100%;
+  min-width: 18rem;
+  max-height: 100%;
+  border-radius: 14px;
+  animation: showcase-enter var(--app-duration-slow) var(--app-easing-decelerate);
+  box-shadow:
+    0 24px 48px -12px rgb(15 23 42 / 52%),
+    0 0 0 1px rgb(255 255 255 / 12%);
+}
+
+@keyframes showcase-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mock__window {
+  fill: white;
+}
+
+.mock__topbar,
+.mock__topbar-cut,
+.mock__header {
+  fill: rgb(241 245 249);
+}
+
+.mock__sidebar,
+.mock__lane {
+  fill: rgb(248 250 252);
+}
+
+.mock__dot,
+.mock__text {
+  fill: rgb(203 213 225);
+}
+
+.mock__text--strong {
+  fill: rgb(100 116 139);
+}
+
+.mock__brand,
+.mock__button,
+.mock__number,
+.mock__bar,
+.mock__accent {
+  fill: var(--app-color-primary);
+}
+
+.mock__nav-item {
+  fill: rgb(226 232 240);
+}
+
+.mock__nav-item--active,
+.mock__pill {
+  fill: var(--app-color-primary-subtle);
+}
+
+.mock__field,
+.mock__card,
+.mock__task {
+  fill: white;
+  stroke: rgb(226 232 240);
+}
+
+.mock__row {
+  fill: rgb(248 250 252);
+}
+
+.mock__row--highlight {
+  fill: var(--app-color-primary-subtle);
+  stroke: var(--app-color-primary-muted);
+}
+
+.mock__meter {
+  fill: none;
+  stroke: rgb(226 232 240);
+  stroke-width: 8;
+}
+
+.mock__meter-progress {
+  fill: none;
+  stroke: var(--app-color-primary);
+  stroke-linecap: round;
+  stroke-width: 8;
+}
+
+.mock__bar-back {
+  fill: rgb(226 232 240);
+}
+
+.mock__line,
+.mock__flow,
+.mock__check {
+  fill: none;
+  stroke: var(--app-color-primary);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.mock__flow {
+  stroke: rgb(148 163 184);
+  stroke-width: 2;
+}
+
+.mock__check {
+  stroke: white;
+  stroke-width: 3;
+}
+
+.showcase__indicators {
+  display: flex;
+  align-items: center;
+  gap: tokens.spacing(2xs);
+}
+
+.showcase__indicator {
+  width: 1.5rem;
+  height: 3px;
+  padding: 0;
+  border: none;
+  border-radius: tokens.radius(pill);
+  background-color: rgb(255 255 255 / 32%);
+  cursor: pointer;
+  transition:
+    width var(--app-transition),
+    background-color var(--app-transition);
+
+  &:hover {
+    background-color: rgb(255 255 255 / 60%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+  }
+}
+
+.showcase__indicator--active {
+  width: 2.5rem;
+  background-color: white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase__art {
+    animation: none;
+  }
+}

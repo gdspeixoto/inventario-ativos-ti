@@ -1,0 +1,253 @@
+<section
+  class="showcase"
+  aria-roledescription="carousel"
+  [attr.aria-label]="'auth.showcase.label' | translate"
+  tabindex="0"
+  (mouseenter)="stop()"
+  (mouseleave)="resume()"
+  (focusin)="stop()"
+  (focusout)="resume()"
+  (keydown)="handleKeydown($event)"
+>
+  <header class="showcase__copy">
+    <p class="showcase__eyebrow">{{ 'auth.showcase.eyebrow' | translate }}</p>
+    <h2 class="showcase__title">{{ current().title | translate }}</h2>
+    <p class="showcase__description">{{ current().description | translate }}</p>
+  </header>
+
+  <div class="showcase__stage" aria-live="polite">
+    @switch (current().id) {
+      @case ('overview') {
+        <svg class="showcase__art" viewBox="0 0 520 340" role="img" aria-hidden="true">
+          <defs>
+            <clipPath id="showcase-overview-window">
+              <rect x="0" y="0" width="520" height="340" rx="14" />
+            </clipPath>
+          </defs>
+
+          <g clip-path="url(#showcase-overview-window)">
+            <rect class="mock__window" width="520" height="340" rx="14" />
+            <rect class="mock__topbar" width="520" height="34" rx="14" />
+            <rect class="mock__topbar-cut" y="20" width="520" height="14" />
+            <circle class="mock__dot" cx="18" cy="17" r="4" />
+            <circle class="mock__dot" cx="32" cy="17" r="4" />
+            <circle class="mock__dot" cx="46" cy="17" r="4" />
+            <rect
+              class="mock__text mock__text--strong"
+              x="66"
+              y="13"
+              width="100"
+              height="8"
+              rx="4"
+            />
+
+            <rect class="mock__sidebar" y="34" width="104" height="306" />
+            <rect class="mock__brand" x="16" y="54" width="56" height="10" rx="5" />
+            @for (item of [0, 1, 2, 3, 4]; track item) {
+              <rect
+                class="mock__nav-item"
+                [class.mock__nav-item--active]="item === 1"
+                x="14"
+                [attr.y]="82 + item * 29"
+                width="76"
+                height="18"
+                rx="6"
+              />
+            }
+
+            <rect class="mock__field" x="124" y="54" width="156" height="28" rx="7" />
+            <rect class="mock__field" x="294" y="54" width="98" height="28" rx="7" />
+            <rect class="mock__button" x="410" y="54" width="72" height="28" rx="7" />
+
+            <rect class="mock__card" x="124" y="108" width="108" height="70" rx="10" />
+            <rect class="mock__card" x="248" y="108" width="108" height="70" rx="10" />
+            <rect class="mock__card" x="372" y="108" width="108" height="70" rx="10" />
+            @for (card of [0, 1, 2]; track card) {
+              <rect
+                class="mock__text"
+                [attr.x]="142 + card * 124"
+                y="128"
+                width="54"
+                height="6"
+                rx="3"
+              />
+              <rect
+                class="mock__number"
+                [attr.x]="142 + card * 124"
+                y="146"
+                [attr.width]="card === 1 ? 34 : 44"
+                height="14"
+                rx="4"
+              />
+            }
+
+            <rect class="mock__header" x="124" y="202" width="358" height="22" rx="6" />
+            @for (line of [0, 1, 2, 3]; track line) {
+              <g [attr.transform]="'translate(0,' + (238 + line * 25) + ')'">
+                <rect
+                  class="mock__row"
+                  [class.mock__row--highlight]="line === 1"
+                  x="124"
+                  y="0"
+                  width="358"
+                  height="20"
+                  rx="6"
+                />
+                <rect
+                  class="mock__text mock__text--strong"
+                  x="140"
+                  y="7"
+                  width="64"
+                  height="6"
+                  rx="3"
+                />
+                <rect class="mock__text" x="236" y="7" width="92" height="6" rx="3" />
+                <rect class="mock__pill" x="392" y="4" width="62" height="12" rx="6" />
+              </g>
+            }
+          </g>
+        </svg>
+      }
+
+      @case ('metrics') {
+        <svg class="showcase__art" viewBox="0 0 520 340" role="img" aria-hidden="true">
+          <defs>
+            <clipPath id="showcase-metrics-window">
+              <rect x="0" y="0" width="520" height="340" rx="14" />
+            </clipPath>
+          </defs>
+
+          <g clip-path="url(#showcase-metrics-window)">
+            <rect class="mock__window" width="520" height="340" rx="14" />
+            <rect class="mock__topbar" width="520" height="34" rx="14" />
+            <rect class="mock__topbar-cut" y="20" width="520" height="14" />
+            <rect
+              class="mock__text mock__text--strong"
+              x="22"
+              y="13"
+              width="92"
+              height="8"
+              rx="4"
+            />
+            <rect class="mock__button" x="412" y="8" width="82" height="18" rx="6" />
+
+            <rect class="mock__card" x="24" y="58" width="146" height="96" rx="12" />
+            <rect class="mock__card" x="188" y="58" width="146" height="96" rx="12" />
+            <rect class="mock__card" x="352" y="58" width="146" height="96" rx="12" />
+            @for (card of [0, 1, 2]; track card) {
+              <rect
+                class="mock__text"
+                [attr.x]="44 + card * 164"
+                y="80"
+                width="64"
+                height="6"
+                rx="3"
+              />
+              <circle class="mock__meter" [attr.cx]="96 + card * 164" cy="116" r="24" />
+              <path
+                class="mock__meter-progress"
+                [attr.d]="
+                  card === 0
+                    ? 'M96 92a24 24 0 1 1-20 37'
+                    : card === 1
+                      ? 'M260 92a24 24 0 1 1 4 47'
+                      : 'M424 92a24 24 0 1 1 20 37'
+                "
+              />
+            }
+
+            <rect class="mock__card" x="24" y="182" width="474" height="118" rx="12" />
+            @for (bar of [0, 1, 2, 3, 4, 5]; track bar) {
+              <rect
+                class="mock__bar-back"
+                [attr.x]="54 + bar * 68"
+                y="258"
+                width="34"
+                height="22"
+                rx="6"
+              />
+              <rect
+                class="mock__bar"
+                [attr.x]="54 + bar * 68"
+                [attr.y]="230 - bar * 8 + (bar % 2) * 14"
+                width="34"
+                [attr.height]="50 + bar * 8 - (bar % 2) * 14"
+                rx="6"
+              />
+            }
+            <polyline
+              class="mock__line"
+              points="58,232 126,220 194,238 262,204 330,214 398,188 466,198"
+            />
+          </g>
+        </svg>
+      }
+
+      @case ('workflow') {
+        <svg class="showcase__art" viewBox="0 0 520 340" role="img" aria-hidden="true">
+          <defs>
+            <clipPath id="showcase-workflow-window">
+              <rect x="0" y="0" width="520" height="340" rx="14" />
+            </clipPath>
+          </defs>
+
+          <g clip-path="url(#showcase-workflow-window)">
+            <rect class="mock__window" width="520" height="340" rx="14" />
+            <rect class="mock__topbar" width="520" height="34" rx="14" />
+            <rect class="mock__topbar-cut" y="20" width="520" height="14" />
+            <rect
+              class="mock__text mock__text--strong"
+              x="22"
+              y="13"
+              width="76"
+              height="8"
+              rx="4"
+            />
+
+            <rect class="mock__lane" x="28" y="62" width="134" height="236" rx="12" />
+            <rect class="mock__lane" x="193" y="62" width="134" height="236" rx="12" />
+            <rect class="mock__lane" x="358" y="62" width="134" height="236" rx="12" />
+            @for (lane of [0, 1, 2]; track lane) {
+              <rect
+                class="mock__text mock__text--strong"
+                [attr.x]="48 + lane * 165"
+                y="82"
+                width="64"
+                height="7"
+                rx="3.5"
+              />
+              @for (card of [0, 1, 2]; track card) {
+                <g
+                  [attr.transform]="
+                    'translate(' + (44 + lane * 165) + ',' + (112 + card * 48) + ')'
+                  "
+                >
+                  <rect class="mock__task" width="102" height="34" rx="8" />
+                  <rect class="mock__text" x="12" y="10" width="58" height="5" rx="2.5" />
+                  <rect class="mock__pill" x="12" y="21" width="42" height="7" rx="3.5" />
+                </g>
+              }
+            }
+            <path class="mock__flow" d="M150 129h46m-10-10 10 10-10 10" />
+            <path class="mock__flow" d="M315 177h46m-10-10 10 10-10 10" />
+            <circle class="mock__accent" cx="260" cy="274" r="18" />
+            <path class="mock__check" d="m251 273 7 7 13-15" />
+          </g>
+        </svg>
+      }
+    }
+  </div>
+
+  <div class="showcase__indicators">
+    @for (slide of slides; track slide.id; let i = $index) {
+      <button
+        type="button"
+        class="showcase__indicator"
+        [class.showcase__indicator--active]="i === index()"
+        [attr.aria-current]="i === index()"
+        [attr.aria-label]="slide.title | translate"
+        (click)="goTo(i)"
+      ></button>
+    }
+  </div>
+</section>

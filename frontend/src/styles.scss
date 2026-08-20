@@ -1,0 +1,47 @@
+/**
+ * Global stylesheet.
+ *
+ * Load order matters:
+ *   1. tokens   — CSS custom properties (nothing may run before them)
+ *   2. reset    — normalizes the box model on top of Tailwind Preflight
+ *   3. typography / a11y / scrollbar — global primitives
+ *   4. primeng  — structural overrides for PrimeNG components
+ *
+ * Tailwind itself is loaded from `src/tailwind.css`, listed *before* this file
+ * in angular.json, so anything declared here wins over a utility class.
+ */
+
+@use 'primeicons/primeicons.css';
+@use 'tokens' as tokens;
+@use 'reset';
+@use 'typography';
+@use 'a11y';
+@use 'scrollbar';
+@use 'primeng';
+
+@include tokens.emit;
+
+/* --------------------------------------------------------------- App shell */
+.app-container {
+  width: 100%;
+  max-width: var(--app-content-max-width);
+  margin-inline: auto;
+  padding-inline: var(--app-spacing-lg);
+
+  @media (width < 48rem) {
+    padding-inline: var(--app-spacing-md);
+  }
+}
+
+/* Surface primitive shared by cards, panels and empty states. */
+.app-surface {
+  border: 1px solid var(--app-color-border);
+  border-radius: var(--app-radius-lg);
+  background-color: var(--app-color-card);
+}
+
+/* Subtle dotted background used by the login and error screens. */
+.app-grid-backdrop {
+  background-image: radial-gradient(circle at 1px 1px, var(--app-color-border) 1px, transparent 0);
+  background-size: 24px 24px;
+}
