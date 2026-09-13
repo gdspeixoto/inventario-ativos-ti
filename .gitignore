@@ -36,3 +36,6 @@ backend/src/ControleAtivos.Api/appsettings.Development.json
 # Anexos gravados em disco: conteudo de usuario, nunca versionado.
 storage/
 **/storage/documents/
+
+# Temporário
+.tmp/
